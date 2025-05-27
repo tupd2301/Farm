@@ -126,7 +126,6 @@ namespace Factory
                 .transform.DOLocalMoveX(-2, 0.3f)
                 .SetEase(Ease.OutCirc)
                 .AsyncWaitForCompletion();
-            await currentBox.ShowTop();
             if (currentBoxIndex >= _boxes.Count - 1)
             {
                 ClearBoxs();
@@ -135,7 +134,6 @@ namespace Factory
                 return;
             }
             currentBoxIndex++;
-            UpdatePatienceSlider(0, _boxes[currentBoxIndex].boxConfig.patienceValue);
             float moveDistance = _boxMoveDistance * currentBoxIndex;
             await transform
                 .DOLocalMoveX(-moveDistance, 1f)
@@ -155,7 +153,6 @@ namespace Factory
                 return;
             }
             SpawnTextFloating(item.itemData.cost.ToString(), item.transform.position);
-            _boxes[currentBoxIndex].GetItem(item);
         }
 
         public void ClearBoxs()
@@ -193,14 +190,11 @@ namespace Factory
                 for (int i = 0; i < boxConfig.amount; i++, index++)
                 {
                     var box = Instantiate(_boxPrefab, _boxParent.transform);
-                    box.GetComponent<BoxController>().boxConfig = boxConfig.boxConfig;
                     _boxes.Add(box.GetComponent<BoxController>());
                     box.transform.localPosition = new Vector3(_boxMoveDistance * index, 0, 0);
                     Debug.Log("InitBox: " + boxConfig.boxConfig.boxCurrencyValue);
-                    box.GetComponent<BoxController>().Init(boxConfig.boxConfig);
                 }
             }
-            UpdatePatienceSlider(0, _boxes[currentBoxIndex].boxConfig.patienceValue);
         }
     }
 }

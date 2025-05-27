@@ -78,6 +78,7 @@ namespace Factory
 
         public async Task LoadLevel(int level)
         {
+            Debug.Log($"LoadLevel {level}");
             _isFirstOpenShop = false;
             isStop = true;
             currentLevel = level;
@@ -125,6 +126,7 @@ namespace Factory
         {
             currentDay++;
             ClearItems();
+            Debug.Log($"NextDay {currentDay}");
             isStop = true;
             if (GetCurrentDayConfig() == null)
             {
@@ -143,6 +145,7 @@ namespace Factory
         {
             isStop = true;
             currentLevel++;
+            Debug.Log($"NextLevel {currentLevel}");
             if (GetCurrentLevelConfig() == null)
             {
                 currentLevel = 1;
@@ -156,6 +159,7 @@ namespace Factory
         public async Task ShowWinPanel()
         {
             isStop = true;
+            Debug.Log($"ShowWinPanel");
             await homeUI.ShowWinPanel();
             await NextLevel();
             await Task.Delay(2000);
@@ -163,7 +167,9 @@ namespace Factory
 
         public async Task ShowLosePanel()
         {
+            return;
             isStop = true;
+            Debug.Log($"ShowLosePanel");
             await homeUI.ShowLosePanel();
             await Task.Delay(2000);
             currentDay = 0;
@@ -298,6 +304,9 @@ namespace Factory
                     gearController.Hide();
                     gearController.OnRotate += (float Amplifier) =>
                     {
+                        Debug.Log(
+                            $"Rotate {gearController.itemData.itemName}, {Amplifier},{isStop}, {CheckActiveItemCount()}, {gearController.isHead}"
+                        );
                         if (
                             !gearController.isHead
                             && gearController.itemData != null
@@ -305,6 +314,7 @@ namespace Factory
                             && !CheckActiveItemCount()
                         )
                         {
+                            Debug.Log("Spawn Item");    
                             var screenPosition = gearController.transform.position;
                             SpawnItem(screenPosition, gearController, Amplifier);
                         }
