@@ -1,0 +1,254 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d23e647901e26404f8ebe297db1c1034, type: 3}
+  m_Name: FakeLeaderboardData
+  m_EditorClassIdentifier: 
+  entriesToShow: 30
+  promoteEntries: 10
+  remainEntries: 10
+  highestScore: 30
+  duration: 48
+  difficulty: 1
+  baseScore: 1
+  botMaxScore: 10
+  botLevelRanges:
+  - {x: 0, y: 1}
+  - {x: 1, y: 2}
+  - {x: 2, y: 3}
+  botLevelRates: 0a0000004600000014000000
+  botUpdateInterval: 2
+  fakeNames: 'CapnObvius
+
+    MoustachedWar
+
+    OxfordComma
+
+    JDzX
+
+    BereBery
+
+    Dotso
+
+    Laney03
+
+    CentBox
+
+    Gabler
+
+    Golemri
+
+    Linget
+
+    Prattin
+
+    SoccerLyfe
+
+    TrackerRoz
+
+    Boltex
+
+    Crawlerildr
+
+    Gemmagy
+
+    Haymisab
+
+    LummoAbove
+
+    Revini
+
+    Stegoty
+
+    weeddi
+
+    Briconia
+
+    Dinged
+
+    Godatro
+
+    LawnExtra
+
+    MessagesWitch
+
+    Scannoyer
+
+    TenPrecise
+
+    GoodPlayer223
+
+    Everma
+
+    Lindebasi
+
+    Plotiona
+
+    Shardis
+
+    TigerBoosh
+
+    BanditFix
+
+    Inextsoft55
+
+    Medtershe
+
+    RollXan
+
+    Washton
+
+    Amesiani
+
+    BoostMura
+
+    Insides
+
+    NearlyPool97
+
+    ScoobyWow
+
+    Truestem
+
+    Bracess
+
+    LessChronos
+
+    NeoRadiant
+
+    UnderWa
+
+    BristleKemp
+
+    TheSnail2
+
+    PapaHeadline
+
+    RealMore
+
+    SpunkyBroadway
+
+    xVengeans
+
+    Forumenti
+
+    Nanosakim
+
+    Studison
+
+    Bentlor
+
+    CowPow1
+
+    BeefyCheesy
+
+    Landerne
+
+    Percsha
+
+    Solidgene
+
+    TacticAngles
+
+    Wizewiz5
+
+    Callarts
+
+    Hondatash
+
+    Lightshma
+
+    Pinkin
+
+    Spydersans
+
+    Talenta
+
+    UntamedLlama
+
+    QuotePerson87
+
+    Stonefire
+
+    Biocalo
+
+    Currica
+
+    Borgizen
+
+    Florrekko
+
+    Lentiva
+
+    MrWar
+
+    TigerNees
+
+    DragonQ
+
+    Godanque
+
+    Pongle557
+
+    UpforceSign
+
+    McNephew
+
+    Pandee
+
+    Venuest9
+
+    SweetieDown
+
+    TwinkleStarSprite
+
+    TickleMeBatman
+
+    Casualte42
+
+    JoshXoo
+
+    Postic
+
+    NaanViolence09
+
+    MotoHead
+
+    InAMeeting
+
+    1v1
+    Me
+
+    CapnTanktop
+
+    8BitPoultry
+
+    GoatOnaMission
+
+    SheepOfFury
+
+    UntamedSheep
+
+    AlarminglyPeppy
+
+    GooglyEyeballs
+
+    BruhBruh
+
+    ReinDoge
+
+    SaladCat
+
+    HardcoreCasual
+
+    NoJons
+
+    ItsMonday'

@@ -1,0 +1,148 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a180074c59e6240ed9fd02433a0f82a0, type: 3}
+  m_Name: LevelConfigSO
+  m_EditorClassIdentifier: 
+  levelConfigs:
+  - levelNumber: 0
+    maxOutputCash: 300
+    gridSize: {x: 7, y: 4}
+    maxHeadGearSlots: 2
+    initialLevelCurrency: 125
+    dayConfigurations:
+    - dayNumber: 1
+      numberOfBoxes: 3
+      boxConfigs:
+      - boxType: 0
+        amount: 1
+        boxConfig:
+          boxType: 0
+          weight: 1
+          boxCurrencyValue: 22
+          patienceValue: 30
+      - boxType: 1
+        amount: 2
+        boxConfig:
+          boxType: 1
+          weight: 3
+          boxCurrencyValue: 33
+          patienceValue: 60
+      initialDayCurrency: 5
+      percentOutputCash: 30
+    - dayNumber: 2
+      numberOfBoxes: 3
+      boxConfigs:
+      - boxType: 0
+        amount: 1
+        boxConfig:
+          boxType: 0
+          weight: 1
+          boxCurrencyValue: 52
+          patienceValue: 30
+      - boxType: 1
+        amount: 2
+        boxConfig:
+          boxType: 1
+          weight: 3
+          boxCurrencyValue: 78
+          patienceValue: 60
+      initialDayCurrency: 5
+      percentOutputCash: 70
+  - levelNumber: 1
+    maxOutputCash: 50
+    gridSize: {x: 7, y: 4}
+    maxHeadGearSlots: 2
+    initialLevelCurrency: 125
+    dayConfigurations:
+    - dayNumber: 1
+      numberOfBoxes: 3
+      boxConfigs:
+      - boxType: 0
+        amount: 1
+        boxConfig:
+          boxType: 0
+          weight: 1
+          boxCurrencyValue: 3
+          patienceValue: 30
+      - boxType: 1
+        amount: 2
+        boxConfig:
+          boxType: 1
+          weight: 3
+          boxCurrencyValue: 5
+          patienceValue: 60
+      initialDayCurrency: 5
+      percentOutputCash: 30
+    - dayNumber: 2
+      numberOfBoxes: 3
+      boxConfigs:
+      - boxType: 0
+        amount: 1
+        boxConfig:
+          boxType: 0
+          weight: 1
+          boxCurrencyValue: 8
+          patienceValue: 30
+      - boxType: 1
+        amount: 2
+        boxConfig:
+          boxType: 1
+          weight: 3
+          boxCurrencyValue: 13
+          patienceValue: 60
+      initialDayCurrency: 5
+      percentOutputCash: 70
+  - levelNumber: 2
+    maxOutputCash: 50
+    gridSize: {x: 7, y: 4}
+    maxHeadGearSlots: 2
+    initialLevelCurrency: 125
+    dayConfigurations:
+    - dayNumber: 1
+      numberOfBoxes: 3
+      boxConfigs:
+      - boxType: 0
+        amount: 1
+        boxConfig:
+          boxType: 0
+          weight: 1
+          boxCurrencyValue: 3
+          patienceValue: 30
+      - boxType: 1
+        amount: 2
+        boxConfig:
+          boxType: 1
+          weight: 3
+          boxCurrencyValue: 5
+          patienceValue: 60
+      initialDayCurrency: 5
+      percentOutputCash: 30
+    - dayNumber: 2
+      numberOfBoxes: 3
+      boxConfigs:
+      - boxType: 0
+        amount: 1
+        boxConfig:
+          boxType: 0
+          weight: 1
+          boxCurrencyValue: 8
+          patienceValue: 30
+      - boxType: 1
+        amount: 2
+        boxConfig:
+          boxType: 1
+          weight: 3
+          boxCurrencyValue: 13
+          patienceValue: 60
+      initialDayCurrency: 5
+      percentOutputCash: 70
+  boxConfigSO: {fileID: 11400000, guid: f3d3464ef6d7c481c9153a792cb42525, type: 2}

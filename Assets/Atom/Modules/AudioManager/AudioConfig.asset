@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0104092d6012d479db78a171f9ad703d, type: 3}
+  m_Name: AudioConfig
+  m_EditorClassIdentifier: 
+  _audioClipData:
+  - AudioClip: {fileID: 8300000, guid: 4c08aac7fe22a497a8e813a46c2dc3cc, type: 3}
+    AudioId: ClickButton
+  - AudioClip: {fileID: 8300000, guid: d4f500d27af1f40dc88c29a07036eabb, type: 3}
+    AudioId: MainBG

@@ -1,0 +1,6 @@
+{
+    "CoinCount": 5,
+    "LuckyMultipliers": [2, 3, 4, 5, 4, 3, 2],
+    "RemainDescription": "Watch ads to luckily multiply your FREE coins!",
+    "RemainLastDescription": "Come back tomorrow for more FREE coins!"
+}

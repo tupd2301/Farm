@@ -1,0 +1,75 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6c981a2f86dbb454f92502f25c493439, type: 3}
+  m_Name: Salon_39
+  m_EditorClassIdentifier: 
+  RoomName: Salon_39
+  IsCompleted: 0
+  Level: 0
+  Furnitures:
+  - Type: 1
+    CurrentIndex: -1
+    Prefabs:
+    - PrefabNames:
+      - Room_39_Carpet_1
+      Price: 0
+      IsUnlocked: 0
+    - PrefabNames:
+      - Room_39_Table_1
+      Price: 0
+      IsUnlocked: 0
+    - PrefabNames:
+      - Room_39_Napkin_1
+      - Room_39_Napkin_2
+      - Room_39_Napkin_3
+      Price: 0
+      IsUnlocked: 0
+    - PrefabNames:
+      - Room_39_Cup_1
+      - Room_39_Cup_2
+      - Room_39_Teapot_1
+      Price: 0
+      IsUnlocked: 0
+  - Type: 2
+    CurrentIndex: -1
+    Prefabs:
+    - PrefabNames:
+      - Room_39_Armchair_1
+      Price: 0
+      IsUnlocked: 0
+    - PrefabNames:
+      - Room_39_Cabinet_1
+      Price: 0
+      IsUnlocked: 0
+    - PrefabNames:
+      - Room_39_Plant_4
+      Price: 0
+      IsUnlocked: 0
+    - PrefabNames:
+      - Room_39_Lamp_1
+      Price: 0
+      IsUnlocked: 0
+  - Type: 3
+    CurrentIndex: -1
+    Prefabs:
+    - PrefabNames:
+      - Room_39_Old_clock_1
+      Price: 0
+      IsUnlocked: 0
+    - PrefabNames:
+      - Room_39_Painting_1
+      Price: 0
+      IsUnlocked: 0
+    - PrefabNames:
+      - Room_39_Plant_3
+      Price: 0
+      IsUnlocked: 0
