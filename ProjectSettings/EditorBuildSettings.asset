@@ -9,7 +9,7 @@ EditorBuildSettings:
     path: Assets/Scenes/SampleScene.unity
     guid: 2cda990e2423bbf4892e6590ba056729
   - enabled: 1
-    path: Assets/Farm/Scenes/bootstrap.unity
+    path: Assets/Factory/Scenes/bootstrap.unity
     guid: d4ef4c25aa4424909b88b4ba07f36069
   - enabled: 1
     path: Assets/Farm/Scenes/Home.unity

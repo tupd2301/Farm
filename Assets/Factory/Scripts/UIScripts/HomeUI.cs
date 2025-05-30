@@ -27,6 +27,9 @@ namespace Factory
         private TMP_Text _goldText;
 
         [SerializeField]
+        private TMP_Text _totalFishText;
+
+        [SerializeField]
         private RectTransform _goldContainer;
 
         [SerializeField]
@@ -43,6 +46,9 @@ namespace Factory
         public RectTransform GameStartPanel;
         public TMP_Text GameStartLevelText;
         public TMP_Text GameStartDayText;
+
+        public TMP_Text TotalFishText => _totalFishText;
+        public TMP_Text TotalGoldText => _goldText;
 
         private bool _isLockFirstOpenShop = false;
 
@@ -152,7 +158,7 @@ namespace Factory
                 .DOFade(1, 0.5f)
                 .SetEase(Ease.InSine)
                 .AsyncWaitForCompletion();
-            string text = "Congratulations! You have completed Level " + levelText + "!";
+            string text = "Congratulations! You have completed level " + levelText + "!";
             for (int i = 0; i < text.Length; i++)
             {
                 await Task.Delay(100);
@@ -161,8 +167,8 @@ namespace Factory
             await Task.Delay(1000);
             GameStartLevelText.text = text;
             await Task.Delay(1000);
-            await Task.Delay(2000);
-            await HideGameStartPanel();
+            // await Task.Delay(2000);
+            // await HideGameStartPanel();
         }
 
         public async Task ShowLosePanel()
@@ -186,8 +192,8 @@ namespace Factory
             await Task.Delay(1000);
             GameStartLevelText.text = text;
             await Task.Delay(1000);
-            await Task.Delay(2000);
-            await HideGameStartPanel();
+            // await Task.Delay(2000);
+            // await HideGameStartPanel();
         }
 
         public async Task HideGameStartPanel()
@@ -215,7 +221,7 @@ namespace Factory
         {
             shopItem.panelImage.color = isPurchased
                 ? new Color(0.15f, 0.15f, 0.15f, 1)
-                : new Color(0.4438857f, 0.8962264f, 0.4496849f, 1);
+                : new Color(1, 1, 1, 1);
         }
 
         public void StrikethroughCostText(ShopItem shopItem, bool isStrikethrough = false)
@@ -240,6 +246,11 @@ namespace Factory
                 .DOColor(new Color(1, 1, 1, 0.5f), 0.1f)
                 .SetEase(Ease.InSine)
                 .SetLoops(2, LoopType.Yoyo);
+        }
+
+        public void UpdateTotalFishText(int totalFish)
+        {
+            _totalFishText.text = totalFish.ToString() + "/" + GameManager.Instance.GetCurrentDayConfig().maxInPool;
         }
 
         public void WarningGoldPanel()

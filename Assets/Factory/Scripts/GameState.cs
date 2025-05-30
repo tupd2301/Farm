@@ -55,8 +55,8 @@ namespace Factory
                     {
                         GameManager.Instance.homeUI.gameObject.SetActive(true);
                         GameManager.Instance.homeUI.HideShopPopup();
-                        BoxManager.Instance.isBoxClosing = false;
-                        BoxManager.Instance.OpenGate();
+                        FishManager.Instance.isFishClosing = false;
+                        FishManager.Instance.OpenGate();
                         GameManager.Instance.isStop = false;
                     }
                     break;
@@ -67,7 +67,7 @@ namespace Factory
                         GameManager.Instance.homeUI.gameObject.SetActive(true);
                         GameManager.Instance.homeUI.ShowShopPopup();
                         GameManager.Instance.RandomGearsInShop();
-                        BoxManager.Instance.isBoxClosing = true;
+                        FishManager.Instance.isFishClosing = true;
                     }
                     break;
             }

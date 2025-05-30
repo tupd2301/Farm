@@ -1,0 +1,298 @@
+using System.Collections;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using DG.Tweening;
+using TMPro;
+using UnityEngine;
+using UnityEngine.UI;
+
+namespace Factory
+{
+    public class FishManager : MonoBehaviour
+    {
+        public static FishManager Instance;
+        public List<FishController> _fishes;
+
+        public GameObject _fishPrefab;
+
+        public GameObject _fishParent;
+        public GameObject _gate;
+
+        public Material _waterMaterial;
+
+        public float _fishMoveDistance = 3;
+
+        public int currentFishIndex = 0;
+
+        public bool isFishClosing = false;
+
+        public Slider _patienceSlider;
+        public int totalFish = 0;
+
+        void Awake()
+        {
+            Instance = this;
+            _waterMaterial.SetColor("_Color", new Color(0, 1, 0.979797f, 1f));
+        }
+
+        public void SpawnTextFloating(string text, Vector3 position)
+        {
+            var textObject = PoolSystem.Instance.GetObject("TextFloating");
+            textObject.transform.SetParent(transform);
+            text = float.Parse(text).ToString("0.0");
+            var value = float.Parse(text);
+            textObject.GetComponentInChildren<TMP_Text>().text = "+" + text + "$";
+            textObject.SetActive(true);
+            textObject.transform.localPosition = Vector3.zero;
+            textObject.transform.DOMoveX(position.x, 0).SetEase(Ease.InSine);
+            float moveY = 2;
+            float scale = 1f;
+            if (value > 0 && value < 10)
+            {
+                moveY = 2;
+                scale = 1f;
+            }
+            else if (value >= 10 && value < 100)
+            {
+                moveY = 1;
+                scale = 1.5f;
+            }
+            else if (value >= 100)
+            {
+                moveY = 0.5f;
+                scale = 2f;
+            }
+            textObject.transform.DOScale(Vector3.one * 0.01f * scale, 0.3f).SetEase(Ease.InCirc);
+            textObject
+                .transform.DOLocalMoveY(moveY, 1f)
+                .SetEase(Ease.InSine)
+                .OnComplete(() =>
+                {
+                    textObject.transform.localScale = Vector3.one * 0.01f;
+                    PoolSystem.Instance.ReturnObject(textObject, "TextFloating");
+                });
+        }
+
+        void Update()
+        {
+            if (
+                GameManager.Instance.homeUI != null
+                && !isFishClosing
+                && !GameManager.Instance.isStop
+            )
+            {
+                _patienceSlider.value = Mathf.Clamp(
+                    _patienceSlider.value + Time.deltaTime,
+                    0,
+                    _patienceSlider.maxValue
+                );
+                float value = Mathf.Clamp01(
+                    (float)_patienceSlider.value / _patienceSlider.maxValue
+                );
+                _patienceSlider.fillRect.GetComponent<Image>().color = new Color(
+                    1,
+                    1 - value,
+                    1 - value,
+                    1
+                );
+            }
+        }
+
+        public void UpdatePatienceSlider(int patience, int maxPatience = -1)
+        {
+            if (maxPatience != -1)
+            {
+                _patienceSlider.maxValue = maxPatience;
+            }
+            _patienceSlider.DOValue(patience, 0.3f).SetEase(Ease.InSine);
+            float value = Mathf.Clamp01((float)patience / _patienceSlider.maxValue);
+            _patienceSlider.fillRect.GetComponent<Image>().color = new Color(
+                1,
+                1 - value,
+                1 - value,
+                1
+            );
+            Debug.Log(1 - value);
+        }
+
+        [ContextMenu("MoveNextFish")]
+        public async Task MoveNextFish()
+        {
+            isFishClosing = true;
+            var currentFish = _fishes[currentFishIndex];
+            await _gate
+                .transform.DOLocalMoveX(-2, 0.3f)
+                .SetEase(Ease.OutCirc)
+                .AsyncWaitForCompletion();
+            if (currentFishIndex >= _fishes.Count - 1)
+            {
+                ClearFishes();
+                await Task.Delay(1000);
+                await GameManager.Instance.NextDay();
+                return;
+            }
+            currentFishIndex++;
+            float moveDistance = _fishMoveDistance * currentFishIndex;
+            await transform
+                .DOLocalMoveX(-moveDistance, 1f)
+                .SetEase(Ease.OutCirc)
+                .AsyncWaitForCompletion();
+            await _gate
+                .transform.DOLocalMoveX(0, 0.3f)
+                .SetEase(Ease.OutCirc)
+                .AsyncWaitForCompletion();
+            isFishClosing = false;
+        }
+
+        public void GetItem(ItemController item)
+        {
+            if (currentFishIndex >= _fishes.Count || item == null || isFishClosing)
+            {
+                return;
+            }
+            SpawnTextFloating(item.itemData.cost.ToString(), item.transform.position);
+        }
+
+        public void ClearFishes()
+        {
+            DestroyFishes();
+            transform.DOKill();
+            isFishClosing = true;
+            _gate.transform.DOLocalMoveX(-2, 1f).SetEase(Ease.InSine);
+            transform.DOLocalMoveX(0, 1.0f).SetEase(Ease.InSine);
+        }
+
+        public void OpenGate()
+        {
+            _gate.transform.DOLocalMoveX(0, 1f).SetEase(Ease.InSine);
+        }
+
+        public void DestroyFishes()
+        {
+            foreach (var fish in _fishes)
+            {
+                Destroy(fish.gameObject);
+            }
+            _fishes.Clear();
+        }
+
+        public async Task UpdateFishCountText(int count)
+        {
+            Debug.Log("UpdateFishCountText: " + count);
+            GameManager.Instance.homeUI.UpdateTotalFishText(count);
+            if (count >= GameManager.Instance.GetCurrentDayConfig().maxInPool)
+            {
+                // _waterMaterial.DOKill();
+                // _waterMaterial
+                //     .DOColor(new Color(1, 0.6f, 0.6f, 1), 2f)
+                //     .SetEase(Ease.OutExpo)
+                //     .SetLoops(1, LoopType.Yoyo);
+
+                GameManager.Instance.homeUI.TotalFishText.DOComplete();
+                GameManager.Instance.homeUI.TotalFishText.transform.DOComplete();
+                GameManager.Instance.homeUI.TotalFishText.transform.localScale = Vector3.one;
+                GameManager.Instance.homeUI.TotalFishText.color = Color.white;
+                GameManager
+                    .Instance.homeUI.TotalFishText.DOColor(new Color(1, 0, 0, 1), 0.4f)
+                    .SetEase(Ease.OutExpo)
+                    .SetLoops(4, LoopType.Yoyo);
+                GameManager
+                    .Instance.homeUI.TotalFishText.transform.DOScale(1.2f, 0.4f)
+                    .SetEase(Ease.OutExpo)
+                    .SetLoops(4, LoopType.Yoyo);
+                await Task.Delay(3000);
+                if (
+                    _fishes.FindAll(x => x.state != FishState.Dead).Count
+                    >= GameManager.Instance.GetCurrentDayConfig().maxInPool
+                )
+                {
+                    await Task.Delay(5000);
+                    CheckWinLose();
+                    return;
+                }
+                await UpdateFishCountText(_fishes.FindAll(x => x.state != FishState.Dead).Count);
+            }
+            else
+            {
+                GameManager.Instance.homeUI.TotalFishText.DOKill();
+                GameManager.Instance.homeUI.TotalFishText.transform.DOKill();
+                GameManager.Instance.homeUI.TotalFishText.transform.localScale = Vector3.one;
+                GameManager.Instance.homeUI.TotalFishText.color = Color.white;
+                _waterMaterial.DOKill();
+                _waterMaterial
+                    .DOColor(new Color(0, 1, 0.979797f, 1f), 2f)
+                    .SetEase(Ease.OutExpo)
+                    .SetLoops(1, LoopType.Yoyo);
+            }
+        }
+
+        public async Task SpawnFish(List<FishConfigDay> fishConfigs)
+        {
+            ClearFishes();
+            isFishClosing = false;
+            foreach (var fishConfig in fishConfigs)
+            {
+                var index = 0;
+                for (int i = 0; i < fishConfig.amount; i++, index++)
+                {
+                    await Task.Delay(fishConfig.fishConfig.patienceValue * 1000);
+                    if (
+                        GameManager.Instance.GameState.CurrentState == GameStateType.Shop
+                        || isFishClosing
+                    )
+                    {
+                        return;
+                    }
+                    var fish = Instantiate(_fishPrefab, _fishParent.transform);
+                    _fishes.Add(fish.GetComponent<FishController>());
+                    UpdateFishCountText(_fishes.FindAll(x => x.state != FishState.Dead).Count);
+                    fish.transform.localPosition = new Vector3(_fishMoveDistance, 0, 0);
+                    fish.transform.DOScale(fish.transform.localScale * 1.5f, 0.5f)
+                        .SetEase(Ease.InOutSine)
+                        .SetLoops(2, LoopType.Yoyo);
+                    fish.GetComponent<FishController>().Init(fishConfig.fishConfig);
+                    Debug.Log("InitFish: " + fishConfig.fishConfig.fishCurrencyValue);
+                }
+            }
+            await Task.Delay(10000);
+            CheckWinLose();
+        }
+
+        public void CheckWinLose()
+        {
+            UpdateFishCountText(_fishes.FindAll(x => x.state != FishState.Dead).Count);
+            if (
+                _fishes.FindAll(x => x.state != FishState.Dead).Count
+                >= GameManager.Instance.GetCurrentDayConfig().maxInPool
+            )
+            {
+                Debug.Log("Lose");
+                ClearFishes();
+                GameManager.Instance.ShowLosePanel();
+            }
+            else if (
+                _fishes.FindAll(x => x.state == FishState.Dead).Count == _fishes.Count
+                && _fishes.Count == totalFish
+            )
+            {
+                Debug.Log("Win" + _fishes.FindAll(x => x.state == FishState.Dead).Count);
+                ClearFishes();
+                GameManager.Instance.NextDay();
+            }
+        }
+
+        public async Task Init(List<FishConfigDay> fishConfigs)
+        {
+            ClearFishes();
+            currentFishIndex = 0;
+            totalFish = 0;
+            isFishClosing = true;
+            _fishes = new List<FishController>();
+            foreach (var fishConfig in fishConfigs)
+            {
+                this.totalFish += fishConfig.amount;
+            }
+            UpdateFishCountText(_fishes.FindAll(x => x.state != FishState.Dead).Count);
+        }
+    }
+}

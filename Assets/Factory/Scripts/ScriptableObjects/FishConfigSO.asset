@@ -1,0 +1,60 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 59627162d22c44df990b5a9bffdab955, type: 3}
+  m_Name: FishConfigSO
+  m_EditorClassIdentifier: 
+  fishConfigs:
+  - fishType: 0
+    weight: 1
+    fishCurrencyValue: 0
+    patienceValue: 5
+    dropCoinValue: 0
+    percentDecrease: 0
+    timeDecreasePerTick: 0
+    depth: 0
+    moveArea: 0
+  - fishType: 1
+    weight: 2
+    fishCurrencyValue: 0
+    patienceValue: 3
+    dropCoinValue: 0
+    percentDecrease: 0
+    timeDecreasePerTick: 0
+    depth: 0
+    moveArea: 0
+  - fishType: 2
+    weight: 3
+    fishCurrencyValue: 0
+    patienceValue: 5
+    dropCoinValue: 0
+    percentDecrease: 0
+    timeDecreasePerTick: 0
+    depth: 0
+    moveArea: 0
+  - fishType: 3
+    weight: 5
+    fishCurrencyValue: 0
+    patienceValue: 7
+    dropCoinValue: 0
+    percentDecrease: 0
+    timeDecreasePerTick: 0
+    depth: 0
+    moveArea: 0
+  - fishType: 4
+    weight: 8
+    fishCurrencyValue: 0
+    patienceValue: 10
+    dropCoinValue: 0
+    percentDecrease: 0
+    timeDecreasePerTick: 0
+    depth: 0
+    moveArea: 0

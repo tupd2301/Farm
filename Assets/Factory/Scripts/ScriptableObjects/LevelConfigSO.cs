@@ -11,7 +11,7 @@ namespace Factory
         public List<LevelConfiguration> levelConfigs;
 
         [ReadOnly]
-        public BoxConfigSO boxConfigSO;
+        public FishConfigSO fishConfigSO;
 
         void OnValidate()
         {
@@ -27,55 +27,70 @@ namespace Factory
                 for (int i = 0; i < levelConfig.dayConfigurations.Count; i++)
                 {
                     levelConfig.dayConfigurations[i].dayNumber = i + 1;
-                    List<BoxConfigDay> boxs = levelConfig.dayConfigurations[i].boxConfigs;
+                    List<FishConfigDay> fishes = levelConfig.dayConfigurations[i].fishConfigs;
                     int totalWeight = 0;
-                    int totalBoxes = 0;
-                    foreach (var box in boxs)
+                    int totalFishes = 0;
+                    foreach (var fish in fishes)
                     {
-                        var boxConfig = new BoxConfig();
-                        var config = boxConfigSO.boxConfigs.Find(
-                            (boxConfig) => boxConfig.boxType == box.boxType
+                        var fishConfig = new FishConfig();
+                        var config = fishConfigSO.fishConfigs.Find(
+                            (fishConfig) => fishConfig.fishType == fish.fishType
                         );
                         if (config == null)
                         {
-                            Debug.LogError("BoxConfig not found: " + box.boxType);
-                            boxs.Remove(box);
+                            Debug.LogError("FishConfig not found: " + fish.fishType);
+                            fishes.Remove(fish);
                             continue;
                         }
-                        boxConfig.Copy(
-                            boxConfigSO.boxConfigs.Find(
-                                (boxConfig) => boxConfig.boxType == box.boxType
+                        fishConfig.Copy(
+                            fishConfigSO.fishConfigs.Find(
+                                (fishConfig) => fishConfig.fishType == fish.fishType
                             )
                         );
-                        if (boxConfig == null)
+                        if (fishConfig == null)
                         {
-                            Debug.LogError("BoxConfig not found: " + box.boxType);
+                            Debug.LogError("FishConfig not found: " + fish.fishType);
                             continue;
                         }
-                        box.boxConfig.Copy(boxConfig);
-                        totalWeight += boxConfig.weight;
-                        totalBoxes += box.amount;
+                        fish.fishConfig.Copy(fishConfig);
+                        totalWeight += fishConfig.weight;
+                        totalFishes += fish.amount;
                     }
-                    if (totalBoxes == 0)
+                    if (totalFishes == 0)
                     {
-                        Debug.LogError("Total boxes is 0");
+                        Debug.LogError("Total fishes is 0");
                     }
                     if (totalWeight == 0)
                     {
                         Debug.LogError("Total weight is 0");
                     }
-                    levelConfig.dayConfigurations[i].numberOfBoxes = totalBoxes;
+                    levelConfig.dayConfigurations[i].numberOfFishes = totalFishes;
                     float moneyOfDay =
                         levelConfig.dayConfigurations[i].percentOutputCash
-                        * levelConfig.maxOutputCash
+                        * levelConfig.maxTotalFishHP
+                        / 100;
+                    float coinOfDay =
+                        levelConfig.dayConfigurations[i].percentOutputCash
+                        * levelConfig.maxCoinDrop
                         / 100;
 
-                    foreach (var box in boxs)
+                    foreach (var fish in fishes)
                     {
-                        box.boxConfig.boxCurrencyValue = (int)(
-                            (box.boxConfig.weight / (float)totalWeight)
-                            * moneyOfDay
-                            / (float)box.amount
+                        fish.fishConfig.fishCurrencyValue = Mathf.Max(
+                            Mathf.RoundToInt(
+                                (fish.fishConfig.weight / (float)totalWeight)
+                                    * moneyOfDay
+                                    / (float)fish.amount
+                            ),
+                            1
+                        );
+                        fish.fishConfig.dropCoinValue = Mathf.Max(
+                            Mathf.RoundToInt(
+                                (fish.fishConfig.weight / (float)totalWeight)
+                                    * coinOfDay
+                                    / (float)fish.amount
+                            ),
+                            1
                         );
                     }
                     if (i == levelConfig.dayConfigurations.Count - 1)
@@ -94,7 +109,8 @@ namespace Factory
     public class LevelConfiguration
     {
         public int levelNumber;
-        public int maxOutputCash = 1000;
+        public int maxTotalFishHP = 1000;
+        public int maxCoinDrop = 1000;
         public Vector2Int gridSize = new Vector2Int(7, 4);
         public int maxHeadGearSlots = 1;
         public int initialLevelCurrency = 50;
@@ -102,23 +118,24 @@ namespace Factory
     }
 
     [System.Serializable]
-    public class BoxConfigDay
+    public class FishConfigDay
     {
-        public BoxType boxType;
+        public FishType fishType;
         public int amount;
 
         [ReadOnly]
-        public BoxConfig boxConfig;
+        public FishConfig fishConfig;
     }
 
     [System.Serializable]
     public class DayConfiguration
     {
         public int dayNumber;
-        public int numberOfBoxes = 5;
+        public int numberOfFishes = 5;
 
-        public List<BoxConfigDay> boxConfigs;
+        public List<FishConfigDay> fishConfigs;
         public int initialDayCurrency = 50;
         public int percentOutputCash;
+        public int maxInPool = 10;
     }
 }

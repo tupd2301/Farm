@@ -5,6 +5,8 @@ TagManager:
   serializedVersion: 2
   tags:
   - Item
+  - Liquid
+  - Fish
   layers:
   - Default
   - TransparentFX
@@ -17,7 +19,7 @@ TagManager:
   - Projectile
   - Circle
   - Item
-  - 
+  - Liquid
   - 
   - 
   - 

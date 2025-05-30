@@ -34,7 +34,9 @@ Material:
     - _LineAngle: 90
     - _LineSpeed: 1
     - _LineWidth: 0.047
-    - _SwayAmount: 0.023
-    - _SwaySpeed: 2
-    m_Colors: []
+    - _SwayAmount: 0.2
+    - _SwayFlip: 0
+    - _SwaySpeed: 5
+    m_Colors:
+    - _Color: {r: 1, g: 1, b: 1, a: 1}
   m_BuildTextureStacks: []

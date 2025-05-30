@@ -34,8 +34,8 @@ Material:
     - _Columns: 1
     - _PhaseOffset: 0
     - _Rows: 1
-    - _SwayAmount: 0.03
-    - _SwaySpeed: 1
-    - _SwayX: 0
+    - _SwayAmount: 0.174
+    - _SwaySpeed: 3
+    - _SwayX: 0.076
     m_Colors: []
   m_BuildTextureStacks: []

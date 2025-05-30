@@ -87,7 +87,7 @@ namespace Factory
             _gold = 0;
 
             InitGears(_currentLevelConfig.gridSize);
-            InitBoxes(GetCurrentDayConfig().boxConfigs);
+            InitBoxes(GetCurrentDayConfig().fishConfigs);
             UpdateGold(_gold + _currentLevelConfig.initialLevelCurrency);
             ChangeGameState(GameStateType.Shop);
             await homeUI.ShowGameStartPanel();
@@ -117,9 +117,9 @@ namespace Factory
             return _currentLevelConfig.dayConfigurations[dayNumber];
         }
 
-        public void InitBoxes(List<BoxConfigDay> boxConfigs)
+        public void InitBoxes(List<FishConfigDay> fishConfigs)
         {
-            BoxManager.Instance.Init(boxConfigs);
+            FishManager.Instance.Init(fishConfigs);
         }
 
         public async Task NextDay()
@@ -136,8 +136,10 @@ namespace Factory
             _currentLevelConfig = GetCurrentLevelConfig();
             await homeUI.ShowGameStartPanel();
             ClearItems();
-            InitBoxes(GetCurrentDayConfig().boxConfigs);
-            UpdateGold(_gold + _currentLevelConfig.initialLevelCurrency);
+            InitBoxes(GetCurrentDayConfig().fishConfigs);
+            UpdateGold(_gold + GetCurrentDayConfig().initialDayCurrency);
+            Debug.Log($"UpdateGold + { _currentLevelConfig.initialLevelCurrency}");
+
             ChangeGameState(GameStateType.Shop);
         }
 
@@ -167,11 +169,9 @@ namespace Factory
 
         public async Task ShowLosePanel()
         {
-            return;
             isStop = true;
             Debug.Log($"ShowLosePanel");
             await homeUI.ShowLosePanel();
-            await Task.Delay(2000);
             currentDay = 0;
             ClearAllGears();
             ClearItems();
@@ -181,6 +181,7 @@ namespace Factory
         public void StartGame()
         {
             ChangeGameState(GameStateType.Main);
+            FishManager.Instance.SpawnFish(GameManager.Instance.GetCurrentDayConfig().fishConfigs);
             // ActivateAllHeadGears();
         }
 
@@ -314,7 +315,7 @@ namespace Factory
                             && !CheckActiveItemCount()
                         )
                         {
-                            Debug.Log("Spawn Item");    
+                            Debug.Log("Spawn Item");
                             var screenPosition = gearController.transform.position;
                             SpawnItem(screenPosition, gearController, Amplifier);
                         }
