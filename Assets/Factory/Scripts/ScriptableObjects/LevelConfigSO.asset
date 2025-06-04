@@ -46,7 +46,7 @@ MonoBehaviour:
         fishConfig:
           fishType: 0
           weight: 1
-          fishCurrencyValue: 4
+          fishCurrencyValue: 3
           patienceValue: 5
           dropCoinValue: 2
           percentDecrease: 0
@@ -58,15 +58,15 @@ MonoBehaviour:
         fishConfig:
           fishType: 2
           weight: 3
-          fishCurrencyValue: 12
+          fishCurrencyValue: 10
           patienceValue: 5
-          dropCoinValue: 8
+          dropCoinValue: 6
           percentDecrease: 0
           timeDecreasePerTick: 0
           depth: 0
           moveArea: 0
-      initialDayCurrency: 40
-      percentOutputCash: 10
+      initialDayCurrency: 50
+      percentOutputCash: 8
       maxInPool: 5
     - dayNumber: 3
       numberOfFishes: 12
@@ -153,14 +153,14 @@ MonoBehaviour:
       percentOutputCash: 30
       maxInPool: 5
     - dayNumber: 5
-      numberOfFishes: 8
+      numberOfFishes: 18
       fishConfigs:
       - fishType: 1
         amount: 7
         fishConfig:
           fishType: 1
           weight: 2
-          fishCurrencyValue: 6
+          fishCurrencyValue: 5
           patienceValue: 3
           dropCoinValue: 3
           percentDecrease: 0
@@ -172,15 +172,27 @@ MonoBehaviour:
         fishConfig:
           fishType: 4
           weight: 8
-          fishCurrencyValue: 156
+          fishCurrencyValue: 149
           patienceValue: 10
-          dropCoinValue: 94
+          dropCoinValue: 89
+          percentDecrease: 0
+          timeDecreasePerTick: 0
+          depth: 0
+          moveArea: 0
+      - fishType: 5
+        amount: 10
+        fishConfig:
+          fishType: 5
+          weight: 1
+          fishCurrencyValue: 2
+          patienceValue: 2
+          dropCoinValue: 1
           percentDecrease: 0
           timeDecreasePerTick: 0
           depth: 0
           moveArea: 0
       initialDayCurrency: 20
-      percentOutputCash: 39
+      percentOutputCash: 41
       maxInPool: 5
   - levelNumber: 1
     maxTotalFishHP: 40

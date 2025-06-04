@@ -58,3 +58,12 @@ MonoBehaviour:
     timeDecreasePerTick: 0
     depth: 0
     moveArea: 0
+  - fishType: 5
+    weight: 1
+    fishCurrencyValue: 0
+    patienceValue: 2
+    dropCoinValue: 0
+    percentDecrease: 0
+    timeDecreasePerTick: 0
+    depth: 0
+    moveArea: 0
