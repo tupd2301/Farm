@@ -29,6 +29,8 @@ namespace Factory
         public Slider _patienceSlider;
         public int totalFish = 0;
 
+        public int indexFish = 0;
+
         void Awake()
         {
             Instance = this;
@@ -180,7 +182,7 @@ namespace Factory
         {
             Debug.Log("UpdateFishCountText: " + count);
             GameManager.Instance.homeUI.UpdateTotalFishText(count);
-            if (count >= GameManager.Instance.GetCurrentDayConfig().maxInPool)
+            if (count <= 2)
             {
                 // _waterMaterial.DOKill();
                 // _waterMaterial
@@ -201,16 +203,7 @@ namespace Factory
                     .SetEase(Ease.OutExpo)
                     .SetLoops(4, LoopType.Yoyo);
                 await Task.Delay(3000);
-                if (
-                    _fishes.FindAll(x => x.state != FishState.Dead).Count
-                    >= GameManager.Instance.GetCurrentDayConfig().maxInPool
-                )
-                {
-                    await Task.Delay(5000);
-                    CheckWinLose();
-                    return;
-                }
-                await UpdateFishCountText(_fishes.FindAll(x => x.state != FishState.Dead).Count);
+                await UpdateFishCountText(GameManager.Instance.GetCurrentDayConfig().maxInPool - _fishes.FindAll(x => x.state == FishState.Dead).Count);
             }
             else
             {
@@ -245,39 +238,38 @@ namespace Factory
                     }
                     var fish = Instantiate(_fishPrefab, _fishParent.transform);
                     _fishes.Add(fish.GetComponent<FishController>());
-                    UpdateFishCountText(_fishes.FindAll(x => x.state != FishState.Dead).Count);
                     fish.transform.localPosition = new Vector3(_fishMoveDistance, 0, 0);
                     fish.transform.DOScale(fish.transform.localScale * 1.5f, 0.5f)
                         .SetEase(Ease.InOutSine)
                         .SetLoops(2, LoopType.Yoyo);
-                    fish.GetComponent<FishController>().Init(fishConfig.fishConfig);
+                    fish.GetComponent<FishController>().Init(fishConfig.fishConfig, indexFish);
+                    indexFish += 2;
                     Debug.Log("InitFish: " + fishConfig.fishConfig.fishCurrencyValue);
+                    fish.gameObject.name = "Fish" + index;
                 }
             }
             await Task.Delay(10000);
-            CheckWinLose();
+            // CheckWinLose();
         }
 
         public void CheckWinLose()
         {
-            UpdateFishCountText(_fishes.FindAll(x => x.state != FishState.Dead).Count);
+            UpdateFishCountText(GameManager.Instance.GetCurrentDayConfig().maxInPool - _fishes.FindAll(x => x.state == FishState.Dead).Count);
             if (
-                _fishes.FindAll(x => x.state != FishState.Dead).Count
+                _fishes.FindAll(x => x.state == FishState.Dead).Count
                 >= GameManager.Instance.GetCurrentDayConfig().maxInPool
             )
             {
                 Debug.Log("Lose");
-                ClearFishes();
                 GameManager.Instance.ShowLosePanel();
             }
-            else if (
-                _fishes.FindAll(x => x.state == FishState.Dead).Count == _fishes.Count
-                && _fishes.Count == totalFish
-            )
+            else if (_fishes.Count == totalFish)
             {
-                Debug.Log("Win" + _fishes.FindAll(x => x.state == FishState.Dead).Count);
-                ClearFishes();
-                GameManager.Instance.NextDay();
+                if (_fishes.FindAll(x => x.state == FishState.Moving).Count == 0)
+                {
+                    Debug.Log("Win" + _fishes.FindAll(x => x.state == FishState.Dead).Count);
+                    GameManager.Instance.NextDay();
+                }
             }
         }
 
@@ -292,7 +284,7 @@ namespace Factory
             {
                 this.totalFish += fishConfig.amount;
             }
-            UpdateFishCountText(_fishes.FindAll(x => x.state != FishState.Dead).Count);
+            UpdateFishCountText(GameManager.Instance.GetCurrentDayConfig().maxInPool);
         }
     }
 }

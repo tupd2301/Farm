@@ -58,9 +58,9 @@ Shader "Unlit/AnimateSprite"
             v2f vert (appdata v)
             {
                 v2f o;
-                float sway = sin(_Time.y * _SwaySpeed + v.vertex.x * 2.0) * _SwayAmount;
+                float sway = sin(_Time.y * _SwaySpeed*10 + v.vertex.x * 2.0) * _SwayAmount;
                 float4 pos = v.vertex;
-                float swayMask = saturate((0.6 -v.uv.x ) * 2.0); // 0 for uv.y <= 0.5, 1 for uv.y == 1
+                float swayMask = saturate((v.uv.x - 0.8) * 2.0); // 0 for uv.y <= 0.5, 1 for uv.y == 1
                 if (_SwayFlip == 1)
                 {
                     pos.x += sway * swayMask; // Changed from pos.x to pos.y for vertical sway

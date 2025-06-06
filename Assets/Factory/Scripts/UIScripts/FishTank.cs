@@ -35,7 +35,10 @@ namespace Factory
             _basePoints = new List<Vector3>();
             for (int i = 0; i < _spriteShapeController.spline.GetPointCount(); i++)
             {
-                _basePoints.Add(_spriteShapeController.spline.GetPosition(i));
+                if (_spriteShapeController.spline.GetPosition(i).y == 0)
+                {
+                    _basePoints.Add(_spriteShapeController.spline.GetPosition(i));
+                }
             }
         }
 

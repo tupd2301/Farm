@@ -30,6 +30,12 @@ namespace Factory
         private TMP_Text _totalFishText;
 
         [SerializeField]
+        private TMP_Text _waveText;
+
+        [SerializeField]
+        private Slider _levelProgressSlider;
+
+        [SerializeField]
         private RectTransform _goldContainer;
 
         [SerializeField]
@@ -90,6 +96,25 @@ namespace Factory
         {
             _shopPopup.SetActive(false);
         }
+        public void UpdateDay()
+        {
+            UpdateWaveText();
+            UpdateLevelProgressSlider();
+        }
+
+        public void UpdateWaveText()
+        {
+            _waveText.text =
+                "Wave "
+                + (GameManager.Instance.currentDay + 1)
+                + "/"
+                + GameManager.Instance.GetCurrentLevelConfig().dayConfigurations.Count;
+        }
+
+        public void UpdateLevelProgressSlider()
+        {
+            _levelProgressSlider.value = (GameManager.Instance.currentDay + 1) / (float)GameManager.Instance.GetCurrentLevelConfig().dayConfigurations.Count;
+        }
 
         public async Task ShowGameStartPanel()
         {
@@ -123,18 +148,18 @@ namespace Factory
             string textDay = "Day " + (GameManager.Instance.currentDay + 1);
             for (int i = 0; i < textLevel.Length; i++)
             {
-                await Task.Delay(100);
+                await Task.Delay(50);
                 GameStartLevelText.text = textLevel.Substring(0, i + 1);
             }
-            await Task.Delay(1000);
+            await Task.Delay(500);
             GameStartLevelText.text = textLevel;
-            for (int i = 0; i < textDay.Length; i++)
-            {
-                await Task.Delay(100);
-                GameStartDayText.text = textDay.Substring(0, i + 1);
-            }
-            await Task.Delay(1000);
-            GameStartDayText.text = textDay;
+            // for (int i = 0; i < textDay.Length; i++)
+            // {
+            //     await Task.Delay(100);
+            //     GameStartDayText.text = textDay.Substring(0, i + 1);
+            // }
+            // await Task.Delay(1000);
+            // GameStartDayText.text = textDay;
         }
 
         public async Task ShowWinPanel()
@@ -161,12 +186,12 @@ namespace Factory
             string text = "Congratulations! You have completed level " + levelText + "!";
             for (int i = 0; i < text.Length; i++)
             {
-                await Task.Delay(100);
+                await Task.Delay(50);
                 GameStartLevelText.text = text.Substring(0, i + 1);
             }
-            await Task.Delay(1000);
+            await Task.Delay(500);
             GameStartLevelText.text = text;
-            await Task.Delay(1000);
+            await Task.Delay(500);
             // await Task.Delay(2000);
             // await HideGameStartPanel();
         }
@@ -186,12 +211,12 @@ namespace Factory
             string text = "You have lost the game!";
             for (int i = 0; i < text.Length; i++)
             {
-                await Task.Delay(100);
+                await Task.Delay(50);
                 GameStartLevelText.text = text.Substring(0, i + 1);
             }
-            await Task.Delay(1000);
+            await Task.Delay(500);
             GameStartLevelText.text = text;
-            await Task.Delay(1000);
+            await Task.Delay(500);
             // await Task.Delay(2000);
             // await HideGameStartPanel();
         }
@@ -222,6 +247,9 @@ namespace Factory
             shopItem.panelImage.color = isPurchased
                 ? new Color(0.15f, 0.15f, 0.15f, 1)
                 : new Color(1, 1, 1, 1);
+            shopItem.priceImage.color = isPurchased
+                ? new Color(0.15f, 0.15f, 0.15f, 1)
+                : new Color(1, 1, 1, 1);
         }
 
         public void StrikethroughCostText(ShopItem shopItem, bool isStrikethrough = false)
@@ -250,7 +278,7 @@ namespace Factory
 
         public void UpdateTotalFishText(int totalFish)
         {
-            _totalFishText.text = totalFish.ToString() + "/" + GameManager.Instance.GetCurrentDayConfig().maxInPool;
+            _totalFishText.text = totalFish.ToString();
         }
 
         public void WarningGoldPanel()
@@ -283,5 +311,6 @@ namespace Factory
         public bool purchased = false;
         public bool priceStrikethrough = false;
         public Image panelImage;
+        public Image priceImage;
     }
 }

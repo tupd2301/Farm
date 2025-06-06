@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using DG.Tweening;
 using UnityEngine;
 
@@ -17,6 +18,10 @@ namespace Factory
 
         public bool isInLiquid = false;
 
+        public Tween moveTween;
+
+        public AnimationCurve leafDropCurve;
+
         private void KillAllTweens()
         {
             // Kill any DOTween animations on the item icon
@@ -28,6 +33,9 @@ namespace Factory
 
             // Kill any transform tweens
             transform.DOKill();
+
+            // Kill any move tween
+            moveTween.Kill();
         }
 
         void OnEnable()
@@ -55,6 +63,11 @@ namespace Factory
             SetGravityInAir();
         }
 
+        void OnDisable()
+        {
+            KillAllTweens();
+        }
+
         void Update()
         {
             if (transform.position.y < -10)
@@ -72,20 +85,68 @@ namespace Factory
         {
             isInLiquid = false;
             GetComponent<Collider2D>().isTrigger = false;
-            GetComponent<Rigidbody2D>().gravityScale = 0.5f;
+            GetComponent<Rigidbody2D>().gravityScale = 1f;
         }
 
-        private void SetGravityInLiquid()
+        private async Task SetGravityInLiquid()
         {
             GetComponent<Collider2D>().isTrigger = true;
-            GetComponent<Rigidbody2D>().gravityScale = 0.1f;
-            _itemIcon
-                .DOColor(new Color(0, 0.5f, 1, 1), 3f)
-                .SetEase(Ease.InExpo)
-                .OnComplete(() =>
+            GetComponent<Rigidbody2D>().gravityScale = 0f; // Reduced gravity for slower fall
+
+            // Kill any existing move tween
+            moveTween?.Kill();
+            if (itemData.dropType == DropType.Leaf)
+            {
+                await SetLeafDrop();
+            }
+            else if (itemData.dropType == DropType.Standard)
+            {
+                SetStandardDrop();
+            }
+        }
+
+        public async Task SetStandardDrop()
+        {
+            moveTween = null;
+            GetComponent<Rigidbody2D>().gravityScale = 0.05f;
+        }
+
+        public async Task SetLeafDrop()
+        {
+            bool moveLeft = true;
+
+            transform
+                .DORotate(new Vector3(0, 0, 90), 4f, RotateMode.LocalAxisAdd)
+                .SetEase(Ease.Linear)
+                .SetLoops(-1, LoopType.Yoyo);
+            // Create the zigzag sequence
+            moveTween = transform
+                .DOLocalMoveY(transform.localPosition.y - 2f, 3f)
+                .SetEase(leafDropCurve)
+                .SetLoops(5, LoopType.Incremental)
+                .OnComplete(async () =>
                 {
-                    Dissolve();
+                    await CollectItem();
                 });
+            for (int i = 0; i < 5; i++)
+            {
+                await transform
+                    .DOLocalMoveX(transform.localPosition.x + (moveLeft ? -1.5f : 1.5f), 1.5f)
+                    .SetLoops(2, LoopType.Yoyo)
+                    .AsyncWaitForCompletion();
+                moveLeft = !moveLeft;
+            }
+        }
+
+        public async Task CollectItem()
+        {
+            if (isCollected)
+            {
+                return;
+            }
+            await Task.Delay(2000);
+            isCollected = true;
+            GameManager.Instance.CollectItem(this);
         }
 
         public void SetItemData(ItemData itemData, float cost = 0)
@@ -138,6 +199,12 @@ namespace Factory
             {
                 UsingRaycast();
             }
+            if (transform.localPosition.y <= -7 && GetComponent<Collider2D>().isTrigger)
+            {
+                GetComponent<Rigidbody2D>().gravityScale = 0f;
+                GetComponent<Collider2D>().isTrigger = false;
+                CollectItem();
+            }
         }
 
         void FreezeConstrain()
@@ -164,7 +231,7 @@ namespace Factory
                     if (hit.collider.CompareTag("Liquid") && !isInLiquid)
                     {
                         isInLiquid = true;
-                        Invoke(nameof(SetGravityInLiquid), 2f);
+                        Invoke(nameof(SetGravityInLiquid), 0.5f);
                         FreezeConstrain();
                     }
                     if (hit.collider.CompareTag("Item") && !isCollected && mergeable)

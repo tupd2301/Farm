@@ -22,14 +22,17 @@ namespace Factory
             isCollected = false;
             transform.DOComplete();
             transform.DOLocalMoveY(-8.9f, 1f).SetEase(Ease.InSine);
+            if (isCollected || gameObject.activeSelf == false)
+                return;
+            CancelInvoke("OnClick");
             Invoke("OnClick", 5f);
         }
 
         public void OnClick()
         {
-            if (isCollected)
+            if (isCollected || gameObject.activeSelf == false)
                 return;
-
+            CancelInvoke("OnClick");
             isCollected = true;
             transform.DOComplete();
             transform

@@ -54,6 +54,7 @@ namespace Factory
         public string iconName;
         public float cost;
         public float size;
+        public DropType dropType;
 
         public bool isCustom;
 
@@ -66,6 +67,7 @@ namespace Factory
             itemName = other.itemName;
             iconName = other.iconName;
             cost = other.cost;
+            dropType = other.dropType;
             size = other.size;
             mergeableItems = other.mergeableItems;
         }
@@ -77,5 +79,11 @@ namespace Factory
         public int itemId;
         public int amount;
         public int outputItemId;
+    }
+
+    public enum DropType
+    {
+        Leaf,
+        Standard,
     }
 }

@@ -34,7 +34,10 @@ namespace Factory
         private Sprite _gear1;
 
         [SerializeField]
-        private Sprite _gear6;
+        private Sprite _gear6ForItemIcon;
+
+        [SerializeField]
+        private Sprite _gear6ForTextIcon;
 
         public Vector2 gridCoordinate;
 
@@ -114,6 +117,7 @@ namespace Factory
                 _levelText.gameObject.SetActive(true);
                 _gearItemIcon.gameObject.SetActive(false);
                 _levelText.text = gearData.level.ToString();
+                SetGear(gearData.id);
             }
             else
             {
@@ -123,10 +127,12 @@ namespace Factory
                 if (sprite != null)
                 {
                     _gearItemIcon.sprite = sprite;
+                    SetGear(gearData.id);
                 }
                 else
                 {
                     _gearItemIcon.sprite = null;
+                    SetGear(gearData.id);
                 }
             }
         }
@@ -143,7 +149,12 @@ namespace Factory
 
         public void SetGear(int gear)
         {
-            _gearIcon.sprite = gear == 1 ? _gear1 : _gear6;
+            if(isHead)
+            {
+                _gearIcon.sprite = _gear1;
+                return;
+            }
+            _gearIcon.sprite = gear == 0 ? _gear6ForTextIcon : _gear6ForItemIcon;
         }
 
         public void Connect(GearController gear, int direction)

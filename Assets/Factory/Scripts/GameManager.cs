@@ -90,6 +90,7 @@ namespace Factory
             InitBoxes(GetCurrentDayConfig().fishConfigs);
             UpdateGold(_gold + _currentLevelConfig.initialLevelCurrency);
             ChangeGameState(GameStateType.Shop);
+            homeUI.UpdateDay();
             await homeUI.ShowGameStartPanel();
         }
 
@@ -124,6 +125,8 @@ namespace Factory
 
         public async Task NextDay()
         {
+            await Task.Delay(2000);
+            FishManager.Instance.ClearFishes();
             currentDay++;
             ClearItems();
             Debug.Log($"NextDay {currentDay}");
@@ -138,13 +141,15 @@ namespace Factory
             ClearItems();
             InitBoxes(GetCurrentDayConfig().fishConfigs);
             UpdateGold(_gold + GetCurrentDayConfig().initialDayCurrency);
-            Debug.Log($"UpdateGold + { _currentLevelConfig.initialLevelCurrency}");
-
+            Debug.Log($"UpdateGold + {_currentLevelConfig.initialLevelCurrency}");
+            homeUI.UpdateDay();
             ChangeGameState(GameStateType.Shop);
         }
 
         public async Task NextLevel()
         {
+            FishManager.Instance.ClearFishes();
+            await Task.Delay(2000);
             isStop = true;
             currentLevel++;
             Debug.Log($"NextLevel {currentLevel}");
@@ -160,6 +165,8 @@ namespace Factory
 
         public async Task ShowWinPanel()
         {
+            FishManager.Instance.ClearFishes();
+            await Task.Delay(2000);
             isStop = true;
             Debug.Log($"ShowWinPanel");
             await homeUI.ShowWinPanel();
@@ -169,6 +176,8 @@ namespace Factory
 
         public async Task ShowLosePanel()
         {
+            FishManager.Instance.ClearFishes();
+            await Task.Delay(2000);
             isStop = true;
             Debug.Log($"ShowLosePanel");
             await homeUI.ShowLosePanel();
@@ -284,7 +293,7 @@ namespace Factory
             ClearAllGears();
             float size = 110;
             homeUI.GearItemContainer.cellSize = new Vector2(size, size);
-            homeUI.GearItemContainer.spacing = new Vector2(1, 5);
+            homeUI.GearItemContainer.spacing = new Vector2(-5, -5);
             homeUI.GearItemContainer.constraintCount = (int)gridSize.x;
             for (int i = 0; i < gridSize.y; i++)
             {
@@ -301,8 +310,8 @@ namespace Factory
                         gearController.startAngle = (45 / 2f);
                     }
                     gearController.gridCoordinate = new Vector2(i, j);
-                    gearController.SetGear(6);
                     gearController.Hide();
+                    gearController.SetGear(6);
                     gearController.OnRotate += (float Amplifier) =>
                     {
                         Debug.Log(
@@ -349,10 +358,10 @@ namespace Factory
                     )
                 )
             );
-            _gearControllers[gearindex].SetGear(1);
             _gearControllers[gearindex].Rotate();
             _gearControllers[gearindex].Show();
             _gearControllers[gearindex].isHead = true;
+            _gearControllers[gearindex].SetGear(1);
         }
 
         public void CalculateGearNeighbors()
@@ -443,6 +452,7 @@ namespace Factory
             homeUI.ShopItems[1].gear.FillItemIcon(1);
             homeUI.UpdateCostText(homeUI.ShopItems[1], (int)_gearDataSO.gearDataList[0].cost);
             homeUI.ShopItems[1].purchased = false;
+            homeUI.ShopItems[1].gear.SetGear(_gearDataSO.gearDataList[0].id);
             homeUI.ShopItems[1].gear.OnDropShop = null;
             homeUI.ShopItems[1].gear.OnDropShop += (gearData) =>
             {
@@ -476,6 +486,7 @@ namespace Factory
                         homeUI.UpdateCostText(shopItem, (int)gearData.cost);
                         shopItem.gear.Show();
                         shopItem.gear.FillItemIcon(1);
+                        shopItem.gear.SetGear(gearData.id);
                         shopItem.gear.OnDropShop = null;
                         shopItem.gear.OnDropShop += (gearData) =>
                         {
@@ -514,12 +525,12 @@ namespace Factory
                         || shopItem.purchased
                     )
                     {
-                        homeUI.StrikethroughCostText(shopItem, true);
+                        // homeUI.StrikethroughCostText(shopItem, true);
                         homeUI.UpdatePanelImage(shopItem, true);
                     }
                     else
                     {
-                        homeUI.StrikethroughCostText(shopItem, false);
+                        // homeUI.StrikethroughCostText(shopItem, false);
                         homeUI.UpdatePanelImage(shopItem, false);
                     }
                 }

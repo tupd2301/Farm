@@ -41,103 +41,190 @@ namespace Factory
 
         public Canvas _canvas;
         public Transform _fishBody;
-        public SpriteRenderer _spriteRenderer;
-        public List<Sprite> _sprites;
+
+        [SerializeField]
+        private SpriteRenderer _hpBarMask;
+
+        [SerializeField]
+        private SpriteRenderer _spriteRenderer;
+
+        public SpriteMask _spriteMask;
         public FishState state = FishState.Idle;
         public FishConfig fishConfig;
         public float currentTotalTickValue = 0;
 
         public RectTransform _confuseVFX;
 
-        public Slider _slider;
+        public Transform hpBar;
+
+        public Vector3 targetPosition;
+
+        public Tween _moveTween;
+
+        private int _indexSprite;
+
+        private ItemController _currentTargetItem;
 
         public void Awake()
         {
             _canvas = GetComponentInChildren<Canvas>();
             _canvas.worldCamera = GameManager.Instance.mainCamera;
-            _slider = _canvas.GetComponentInChildren<Slider>();
-            _slider.value = 0;
+            _currentTargetItem = null;
         }
 
         public void SetSprite(int index)
         {
-            _spriteRenderer.sprite = _sprites[index];
+            if (index == _indexSprite)
+            {
+                return;
+            }
+            _indexSprite = index;
+            _spriteRenderer.sprite = fishConfig.sprites[index].sprite;
         }
 
-        public void Init(FishConfig fishConfig)
+        public void Init(FishConfig fishConfig, int index)
         {
+            _hpBarMask.sortingOrder = 100 + index;
+            hpBar.GetComponent<SpriteRenderer>().sortingOrder = 100 + index + 1;
+            _spriteMask.backSortingOrder = 100 + index;
+            _spriteMask.frontSortingOrder = 100 + index + 1;
             this.fishConfig = fishConfig;
             currentTotalTickValue = 0;
-            _slider.maxValue = fishConfig.fishCurrencyValue;
-            _slider.value = 0;
             state = FishState.Moving;
-            SetSprite(Random.Range(0, _sprites.Count));
-            MoveRandom();
+            SetSprite(0);
+            targetPosition = transform.position;
+            Move();
+            currentTotalTickValue = fishConfig.fishCurrencyValue * 0.5f;
+            _spriteRenderer.material.SetFloat("_SwaySpeed", 1);
+            _spriteRenderer.material.SetColor("_Color", new Color32(255, 255, 255, 255));
+            _currentTargetItem = null;
+
+            UpdateHpBar();
+            Invoke(nameof(DecreaseHPByTime), 1f);
         }
 
-        public void MoveTo(Vector3 position)
+        public void UpdateHpBar()
         {
-            transform
-                .DOMove(position, tweenParams.moveToPositionDuration)
-                .SetEase(tweenParams.moveToPositionEase);
+            float percent01 = currentTotalTickValue / fishConfig.fishCurrencyValue;
+            hpBar.localScale = new Vector3(percent01, 1, 1);
+            if (percent01 > 0.3f)
+            {
+                hpBar.GetComponent<SpriteRenderer>().color = new Color32(160, 200, 0, 255);
+                SetSprite(0);
+            }
+            else
+            {
+                hpBar.GetComponent<SpriteRenderer>().color = new Color32(210, 50, 20, 255);
+                SetSprite(1);
+            }
         }
 
-        public void FindTarget()
+        public void DecreaseHPByTime()
+        {
+            currentTotalTickValue -=
+                fishConfig.fishCurrencyValue * fishConfig.percentDecrease / 100;
+            UpdateHpBar();
+            if (currentTotalTickValue < 0)
+            {
+                state = FishState.Dead;
+                _moveTween.Kill();
+                FlipWithDirection(new Vector3(-1, -1, 1));
+                transform
+                    .DOLocalMoveY(6, 3f)
+                    .OnComplete(() =>
+                    {
+                        transform.DOScale(0, 0.2f);
+                    });
+                _spriteRenderer.material.SetFloat("_SwaySpeed", 0);
+                FishManager.Instance.CheckWinLose();
+            }
+            if (state == FishState.Dead)
+            {
+                return;
+            }
+            Invoke(nameof(DecreaseHPByTime), 1f);
+        }
+
+        public async Task FindTarget()
         {
             if (state != FishState.Moving)
             {
                 return;
             }
-            //using raycast
-            RaycastHit2D[] hits = Physics2D.CircleCastAll(transform.position, 2f, Vector2.zero);
+            if (_currentTargetItem != null && !_currentTargetItem.isCollected)
+            {
+                targetPosition = _currentTargetItem.transform.position;
+                return;
+            }
+            // Use raycast to find items in range
+            RaycastHit2D[] hits = Physics2D.CircleCastAll(transform.position, 2.5f, Vector2.zero);
+            // Find the closest collectible item
             foreach (RaycastHit2D hit in hits)
             {
-                if (hit.collider != null)
+                if (hit.collider != null && hit.collider.CompareTag("Item"))
                 {
-                    if (hit.collider.CompareTag("Item"))
+                    ItemController item = hit.collider.GetComponent<ItemController>();
+                    if (item.transform.position.y > 0)
                     {
-                        ItemController item = hit.collider.GetComponent<ItemController>();
-                        if (item.isInLiquid && !item.isCollected)
+                        continue;
+                    }
+                    if (
+                        item != null
+                        && item.isInLiquid
+                        && !item.isCollected
+                        && item.gameObject.activeSelf
+                    )
+                    {
+                        if (Vector3.Distance(transform.position, item.transform.position) < 1f)
                         {
-                            item.isCollected = true;
-                            item.transform.DOScale(0.5f, tweenParams.itemCollectScaleDuration)
-                                .SetLoops(2, LoopType.Yoyo);
-                            item.transform.DOMove(
-                                    transform.position,
-                                    tweenParams.itemMoveToFishDuration
+                            Debug.Log("Collect Item");
+                            if (
+                                item.gameObject.activeSelf == false
+                                || string.IsNullOrEmpty(item.itemData.itemName)
+                            )
+                            {
+                                return;
+                            }
+                            _fishBody
+                                .DOScale(
+                                    _fishBody.localScale * tweenParams.fishGrowScaleMultiplier,
+                                    tweenParams.fishGrowScaleDuration
                                 )
-                                .SetEase(tweenParams.itemMoveToFishEase)
-                                .OnComplete(() =>
-                                {
-                                    if (
-                                        item.gameObject.activeSelf == false
-                                        || string.IsNullOrEmpty(item.itemData.itemName)
-                                    )
-                                    {
-                                        return;
-                                    }
-                                    _fishBody
-                                        .DOScale(
-                                            _fishBody.localScale
-                                                * tweenParams.fishGrowScaleMultiplier,
-                                            tweenParams.fishGrowScaleDuration
-                                        )
-                                        .SetLoops(2, LoopType.Yoyo);
-                                    item.isCollected = true;
-                                    GameManager.Instance.CollectItem(item);
-                                    currentTotalTickValue += item.itemData.cost;
-                                    _slider.value = currentTotalTickValue;
-                                });
-                            break;
+                                .SetLoops(2, LoopType.Yoyo);
+                            item.isCollected = true;
+                            GameManager.Instance.CollectItem(item);
+                            currentTotalTickValue += item.itemData.cost;
+                            UpdateHpBar();
+                            CheckFull();
                         }
+                        else
+                        {
+                            targetPosition = item.transform.position;
+                            _currentTargetItem = item;
+                            Move();
+                        }
+                        break;
+                    }
+                    else
+                    {
+                        _currentTargetItem = null;
                     }
                 }
             }
+        }
+
+        public void CheckFull()
+        {
             if (currentTotalTickValue >= fishConfig.fishCurrencyValue)
             {
-                state = FishState.Dead;
-                //using sequence
-                Sequence sequence = DOTween.Sequence();
+                state = FishState.Full;
+                _moveTween.Kill();
+                FlipWithDirection(new Vector3(-1, 1, 1));
+                transform.DOLocalMove(
+                    new Vector3(-15, 0, 0),
+                    Vector2.Distance(transform.localPosition, new Vector3(-15, 0, 0)) / 2
+                );
+                _spriteRenderer.material.SetFloat("_SwaySpeed", 3);
                 var happyVFX = PoolSystem.Instance.GetObject("HappyVFX");
                 happyVFX.transform.localPosition = transform.position;
                 happyVFX.SetActive(true);
@@ -147,53 +234,14 @@ namespace Factory
                 coin.transform.position = transform.position;
                 coin.SetActive(true);
                 coin.GetComponent<CoinController>().value = fishConfig.dropCoinValue;
-                PoolSystem.Instance.ReturnObject(coin, "Coin", 10f);
 
-                sequence.Append(
-                    _fishBody
-                        .DOLocalRotate(
-                            new Vector3(0, 0, tweenParams.fishDeathRotateAngle),
-                            tweenParams.fishDeathRotateDuration,
-                            RotateMode.FastBeyond360
-                        )
-                        .SetEase(tweenParams.fishDeathRotateEase)
-                        .SetLoops(tweenParams.fishDeathRotateLoops, LoopType.Yoyo)
-                        .OnComplete(() =>
-                        {
-                            FlipWithDirection(new Vector3(-1, 1, 1));
-                        })
-                );
-                sequence
-                    .Append(
-                        transform
-                            .DOLocalMoveX(
-                                tweenParams.fishDeathMoveXPosition,
-                                tweenParams.fishDeathMoveXDuration
-                            )
-                            .SetEase(tweenParams.fishDeathMoveEase)
-                    )
-                    .OnStart(() =>
-                    {
-                        state = FishState.Dead;
-                        FlipWithDirection(new Vector3(-1, 1, 1));
-                    });
-                sequence.OnComplete(() =>
-                {
-                    _fishBody
-                        .DOScale(0, 0f)
-                        .SetEase(tweenParams.fishDeathMoveEase)
-                        .OnComplete(() =>
-                        {
-                            transform.localPosition = new Vector3(
-                                tweenParams.fishDeathMoveXPosition,
-                                0,
-                                0
-                            );
-                            FishManager.Instance.CheckWinLose();
-                        });
-                });
-                sequence.Play();
-                return;
+                CancelInvoke(nameof(DecreaseHPByTime));
+                FishManager.Instance.CheckWinLose();
+            }
+            else
+            {
+                targetPosition = transform.position;
+                Move();
             }
         }
 
@@ -203,21 +251,14 @@ namespace Factory
             {
                 FindTarget();
             }
-            if (
-                state == FishState.Dead
-                && _fishBody.localScale.x == 0
-                && transform.localPosition != new Vector3(tweenParams.fishDeathMoveXPosition, 0, 0)
-            )
-            {
-                transform.localPosition = new Vector3(tweenParams.fishDeathMoveXPosition, 0, 0);
-            }
         }
 
         public void OnClick()
         {
             if (state == FishState.Moving)
             {
-                MoveRandom();
+                targetPosition = transform.position;
+                Move();
                 Debug.Log("OnClick");
                 Confuse();
             }
@@ -243,32 +284,35 @@ namespace Factory
             }
         }
 
-        public void MoveRandom()
+        public void Move()
         {
-            if (state == FishState.Dead)
+            if (state == FishState.Dead || state == FishState.Full)
             {
                 return;
             }
-            // Kill any existing movement tween before starting a new one
-            transform.DOKill(false);
-
-            System.Random random = new System.Random();
-            int randomX = random.Next(-4, 4);
-            int randomY = random.Next(-2, 2);
-            float distance = Vector3.Distance(transform.position, new Vector3(randomX, randomY, 0));
-            float time = distance / 2;
-            Vector3 randomPosition = new Vector3(randomX, randomY, 0);
-            Vector3 direction = randomPosition - transform.position;
+            _moveTween.Kill();
+            _moveTween = null;
+            Debug.Log("Move: " + gameObject.name);
+            if (targetPosition == transform.position)
+            {
+                System.Random random = new System.Random();
+                int randomX = random.Next(-4, 4);
+                int randomY = random.Next(-6, 0);
+                targetPosition = new Vector3(randomX, randomY, 0);
+            }
+            float distance = Vector3.Distance(transform.position, targetPosition);
+            float time = distance * 0.5f;
+            Vector3 direction = targetPosition - transform.position;
             Vector3 outputDirection = new Vector3(direction.x > 0 ? 1 : -1, 1, 1);
             FlipWithDirection(outputDirection);
-            transform
-                .DOLocalMove(randomPosition, time)
+            _moveTween = transform
+                .DOMove(targetPosition, time)
                 .SetEase(tweenParams.moveToPositionEase)
                 .OnComplete(() =>
                 {
                     if (state == FishState.Moving)
                     {
-                        MoveRandom();
+                        Move();
                     }
                 });
         }
@@ -280,11 +324,19 @@ namespace Factory
         }
     }
 
+    [System.Serializable]
+    public class FishSpriteByHP
+    {
+        public int percentHP;
+        public Sprite sprite;
+    }
+
     public enum FishState
     {
         Idle,
         Moving,
         Attacking,
         Dead,
+        Full,
     }
 }

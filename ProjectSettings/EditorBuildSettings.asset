@@ -11,14 +11,14 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Factory/Scenes/bootstrap.unity
     guid: d4ef4c25aa4424909b88b4ba07f36069
-  - enabled: 1
+  - enabled: 0
     path: Assets/Farm/Scenes/Home.unity
     guid: 00555480ed8794ae38508eff814d3eda
-  - enabled: 1
+  - enabled: 0
     path: Assets/Factory/Scenes/Factory.unity
     guid: d919948d15a8148c7b0e083fe05ad948
   - enabled: 1
     path: Assets/Factory/Scenes/FishTank.unity
-    guid: fc3d7869964164db283c384bd9c21182
+    guid: f7c625ea112ae48dd9af1bd9571f3282
   m_configObjects:
     com.unity.addressableassets: {fileID: 11400000, guid: 1dcce473e3761428ba5ceb2068db31ec, type: 2}

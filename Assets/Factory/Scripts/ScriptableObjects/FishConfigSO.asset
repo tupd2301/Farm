@@ -18,26 +18,41 @@ MonoBehaviour:
     fishCurrencyValue: 0
     patienceValue: 5
     dropCoinValue: 0
-    percentDecrease: 0
+    percentDecrease: 2
     timeDecreasePerTick: 0
+    sprites:
+    - percentHP: 100
+      sprite: {fileID: 21300000, guid: ddef03920a28e4a8ab346c5de2de91df, type: 3}
+    - percentHP: 30
+      sprite: {fileID: 21300000, guid: 9fa6553076835499abf856d24a17c8fb, type: 3}
     depth: 0
     moveArea: 0
   - fishType: 1
     weight: 2
     fishCurrencyValue: 0
     patienceValue: 3
-    dropCoinValue: 0
-    percentDecrease: 0
+    dropCoinValue: 1
+    percentDecrease: 1
     timeDecreasePerTick: 0
+    sprites:
+    - percentHP: 100
+      sprite: {fileID: 21300000, guid: 663dee80fad1140b98be31d320c32493, type: 3}
+    - percentHP: 30
+      sprite: {fileID: 21300000, guid: d20d0222d75e34f8fbad03158efab32a, type: 3}
     depth: 0
     moveArea: 0
   - fishType: 2
     weight: 3
     fishCurrencyValue: 0
     patienceValue: 5
-    dropCoinValue: 0
-    percentDecrease: 0
+    dropCoinValue: 1
+    percentDecrease: 1
     timeDecreasePerTick: 0
+    sprites:
+    - percentHP: 100
+      sprite: {fileID: 21300000, guid: 0376cadbb38974803958993244e9940a, type: 3}
+    - percentHP: 30
+      sprite: {fileID: 21300000, guid: 75df6d116dcf24a5f9e9973f82b3bef3, type: 3}
     depth: 0
     moveArea: 0
   - fishType: 3
@@ -45,8 +60,13 @@ MonoBehaviour:
     fishCurrencyValue: 0
     patienceValue: 7
     dropCoinValue: 0
-    percentDecrease: 0
+    percentDecrease: 1
     timeDecreasePerTick: 0
+    sprites:
+    - percentHP: 100
+      sprite: {fileID: 21300000, guid: ddef03920a28e4a8ab346c5de2de91df, type: 3}
+    - percentHP: 30
+      sprite: {fileID: 21300000, guid: 9fa6553076835499abf856d24a17c8fb, type: 3}
     depth: 0
     moveArea: 0
   - fishType: 4
@@ -54,8 +74,13 @@ MonoBehaviour:
     fishCurrencyValue: 0
     patienceValue: 10
     dropCoinValue: 0
-    percentDecrease: 0
+    percentDecrease: 1
     timeDecreasePerTick: 0
+    sprites:
+    - percentHP: 100
+      sprite: {fileID: 21300000, guid: 663dee80fad1140b98be31d320c32493, type: 3}
+    - percentHP: 30
+      sprite: {fileID: 21300000, guid: d20d0222d75e34f8fbad03158efab32a, type: 3}
     depth: 0
     moveArea: 0
   - fishType: 5
@@ -63,7 +88,12 @@ MonoBehaviour:
     fishCurrencyValue: 0
     patienceValue: 2
     dropCoinValue: 0
-    percentDecrease: 0
+    percentDecrease: 1
     timeDecreasePerTick: 0
+    sprites:
+    - percentHP: 100
+      sprite: {fileID: 21300000, guid: 0376cadbb38974803958993244e9940a, type: 3}
+    - percentHP: 30
+      sprite: {fileID: 21300000, guid: 75df6d116dcf24a5f9e9973f82b3bef3, type: 3}
     depth: 0
     moveArea: 0

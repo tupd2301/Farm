@@ -23,8 +23,8 @@ MonoBehaviour:
     baseValue: 0.2
     weight: 95
   - id: 1
-    itemName: Flour
-    iconName: flour
+    itemName: Food1
+    iconName: F1
     tickValue: 1
     maxValue: 5
     cost: 12
@@ -32,47 +32,11 @@ MonoBehaviour:
     baseValue: 1
     weight: 5
   - id: 2
-    itemName: Meat
-    iconName: meat
+    itemName: Food2
+    iconName: F2
     tickValue: 1
     maxValue: 5
     cost: 12
     level: 1
     baseValue: 1
     weight: 5
-  - id: 3
-    itemName: Butter
-    iconName: butter
-    tickValue: 1
-    maxValue: 5
-    cost: 12
-    level: 1
-    baseValue: 1
-    weight: 5
-  - id: 4
-    itemName: Biscuit
-    iconName: biscuit
-    tickValue: 1
-    maxValue: 20
-    cost: 70
-    level: 1
-    baseValue: 1
-    weight: 0
-  - id: 5
-    itemName: Steak
-    iconName: steak
-    tickValue: 1
-    maxValue: 20
-    cost: 60
-    level: 1
-    baseValue: 0
-    weight: 0
-  - id: 6
-    itemName: Meat pie
-    iconName: meatpie
-    tickValue: 1
-    maxValue: 20
-    cost: 100
-    level: 1
-    baseValue: 0
-    weight: 0

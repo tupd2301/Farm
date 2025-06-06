@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using Athena.Common.UI;
 using TMPro;
-using UnityEditor.iOS;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -10,28 +9,65 @@ namespace Atom.Modules.SpinWheel
 {
     public class SpinWheelUI : UIController
     {
-        [SerializeField][Range(.2f, 2f)] private float wheelSize = 1f;
-        [SerializeField] private Button _spinButton;
+        [SerializeField]
+        [Range(.2f, 2f)]
+        private float wheelSize = 1f;
+
+        [SerializeField]
+        private Button _spinButton;
 
         [Header("References :")]
-        [SerializeField] private Transform _linesParent;
+        [SerializeField]
+        private Transform _linesParent;
 
         [Space]
-        [SerializeField] private Transform _spinWheelTransform;
-        [SerializeField] private Transform _wheelCircle;
-        [SerializeField] private Transform _wheelPiecesParent;
+        [SerializeField]
+        private Transform _spinWheelTransform;
+
+        [SerializeField]
+        private Transform _wheelCircle;
+
+        [SerializeField]
+        private Transform _wheelPiecesParent;
 
         [Header("Result screen :")]
-        [SerializeField] private GameObject _resultScreen;
-        [SerializeField] private TextMeshProUGUI _resultLabel;
-        [SerializeField] private Image _resultIcon;
-        [SerializeField] private TextMeshProUGUI _resultAmout;
+        [SerializeField]
+        private GameObject _resultScreen;
 
-        public Transform LinesParent { get => _linesParent; set => _linesParent = value; }
-        public Transform SpinWheelTransform { get => _spinWheelTransform; set => _spinWheelTransform = value; }
-        public Transform WheelCircle { get => _wheelCircle; set => _wheelCircle = value; }
-        public Transform WheelPiecesParent { get => _wheelPiecesParent; set => _wheelPiecesParent = value; }
-        public Button SpinButton { get => _spinButton; set => _spinButton = value; }
+        [SerializeField]
+        private TextMeshProUGUI _resultLabel;
+
+        [SerializeField]
+        private Image _resultIcon;
+
+        [SerializeField]
+        private TextMeshProUGUI _resultAmout;
+
+        public Transform LinesParent
+        {
+            get => _linesParent;
+            set => _linesParent = value;
+        }
+        public Transform SpinWheelTransform
+        {
+            get => _spinWheelTransform;
+            set => _spinWheelTransform = value;
+        }
+        public Transform WheelCircle
+        {
+            get => _wheelCircle;
+            set => _wheelCircle = value;
+        }
+        public Transform WheelPiecesParent
+        {
+            get => _wheelPiecesParent;
+            set => _wheelPiecesParent = value;
+        }
+        public Button SpinButton
+        {
+            get => _spinButton;
+            set => _spinButton = value;
+        }
 
         public void ShowResultScreen(WheelPiece piece)
         {

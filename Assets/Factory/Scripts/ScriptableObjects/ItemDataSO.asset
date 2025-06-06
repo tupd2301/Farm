@@ -15,73 +15,19 @@ MonoBehaviour:
   itemDataList:
   - itemId: 0
     gearId: 1
-    itemName: Flour
-    iconName: flour
+    itemName: Food1
+    iconName: F1_Item
     cost: 1
-    size: 0.75
-    isCustom: 1
-    mergeableItems:
-    - itemId: 2
-      amount: 1
-      outputItemId: 3
-    - itemId: 4
-      amount: 1
-      outputItemId: 5
+    size: 1.5
+    dropType: 1
+    isCustom: 0
+    mergeableItems: []
   - itemId: 1
     gearId: 2
-    itemName: Meat
-    iconName: meat
+    itemName: Food2
+    iconName: F2_Item
     cost: 1
-    size: 0.75
-    isCustom: 1
-    mergeableItems:
-    - itemId: 2
-      amount: 1
-      outputItemId: 4
-    - itemId: 3
-      amount: 1
-      outputItemId: 5
-  - itemId: 2
-    gearId: 3
-    itemName: Butter
-    iconName: butter
-    cost: 1
-    size: 0.75
-    isCustom: 0
-    mergeableItems:
-    - itemId: 0
-      amount: 1
-      outputItemId: 3
-    - itemId: 1
-      amount: 1
-      outputItemId: 4
-  - itemId: 3
-    gearId: 4
-    itemName: Biscuit
-    iconName: biscuit
-    cost: 1.5
-    size: 1
-    isCustom: 0
-    mergeableItems:
-    - itemId: 1
-      amount: 1
-      outputItemId: 5
-  - itemId: 4
-    gearId: 5
-    itemName: Steak
-    iconName: steak
-    cost: 1.5
-    size: 1
-    isCustom: 0
-    mergeableItems:
-    - itemId: 0
-      amount: 1
-      outputItemId: 5
-  - itemId: 5
-    gearId: 6
-    itemName: Meat Pie
-    iconName: meatpie
-    cost: 2
-    size: 1.3
+    size: 1.5
+    dropType: 0
     isCustom: 0
     mergeableItems: []

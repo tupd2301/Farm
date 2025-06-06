@@ -96,6 +96,8 @@ namespace Factory
         public float percentDecrease = 0;
         public float timeDecreasePerTick = 0;
 
+        public List<FishSpriteByHP> sprites;
+
         [Range(0, 4)]
         public float depth = 0;
 
@@ -113,6 +115,7 @@ namespace Factory
             timeDecreasePerTick = other.timeDecreasePerTick;
             depth = other.depth;
             moveArea = other.moveArea;
+            sprites = other.sprites;
         }
     }
 }
