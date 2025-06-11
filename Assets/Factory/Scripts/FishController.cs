@@ -67,7 +67,6 @@ namespace Factory
 
         protected bool _lockTarget = false;
 
-
         public void Awake()
         {
             _canvas = GetComponentInChildren<Canvas>();
@@ -85,11 +84,7 @@ namespace Factory
 
         public void SetSprite(int index)
         {
-            if (
-                index == _indexSprite
-                || index >= fishConfig.sprites.Count
-                || fishConfig.sprites[index].sprite == null
-            )
+            if (index == _indexSprite)
             {
                 return;
             }
@@ -135,7 +130,7 @@ namespace Factory
             else
             {
                 hpBar.GetComponent<SpriteRenderer>().color = new Color32(210, 50, 20, 255);
-                SetSprite(1);
+                // SetSprite(1);
             }
         }
 
