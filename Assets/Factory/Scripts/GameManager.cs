@@ -565,7 +565,7 @@ namespace Factory
             }
         }
 
-        public void RandomGearsInShop()
+        public void RandomGearsInShop(bool isFree = false)
         {
             if (!_isFirstOpenShop)
             {
@@ -574,8 +574,11 @@ namespace Factory
                 _isFirstOpenShop = true;
                 return;
             }
-            _gold -= 5;
-            UpdateGold(_gold);
+            if (!isFree)
+            {
+                _gold -= 5;
+                UpdateGold(_gold);
+            }
             var totalWeight = 0f;
             foreach (var gearData in _gearDataSO.gearDataList)
             {

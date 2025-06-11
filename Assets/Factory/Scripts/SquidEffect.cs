@@ -12,7 +12,7 @@ public class SquidEffect : MonoBehaviour
 
     public float duration = 1f;
 
-    public void Update()
+    void Update()
     {
         //raycast to find fish
         RaycastHit2D[] hits = Physics2D.BoxCastAll(

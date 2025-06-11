@@ -67,7 +67,7 @@ namespace Factory
                     {
                         GameManager.Instance.homeUI.gameObject.SetActive(true);
                         GameManager.Instance.homeUI.ShowShopPopup();
-                        GameManager.Instance.RandomGearsInShop();
+                        GameManager.Instance.RandomGearsInShop(true);
                         FishManager.Instance.isFishClosing = true;
                         GameManager.Instance.homeUI.OffsetGearItemContainer();
                         GameManager.Instance.SetFillAllGearsInShop();
