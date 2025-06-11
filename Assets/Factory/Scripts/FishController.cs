@@ -84,10 +84,6 @@ namespace Factory
 
         public void SetSprite(int index)
         {
-            if (index == _indexSprite)
-            {
-                return;
-            }
             _indexSprite = index;
             _spriteRenderer.sprite = fishConfig.sprites[index].sprite;
         }
