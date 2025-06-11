@@ -15,20 +15,28 @@ public class SquidEffect : MonoBehaviour
     public void Update()
     {
         //raycast to find fish
-        RaycastHit2D hit = Physics2D.CircleCast(transform.position, range, Vector2.zero);
-        if (hit.collider != null && hit.collider.CompareTag("Fish"))
+        RaycastHit2D[] hits = Physics2D.BoxCastAll(
+            transform.position,
+            new Vector2(range, range),
+            0,
+            Vector2.zero
+        );
+        foreach (RaycastHit2D hit in hits)
         {
-            var fishController = hit.collider.GetComponent<FishController>();
-            Debug.Log("SquidEffect");
-            if (fishController.state != FishState.Moving)
+            if (hit.collider != null && hit.collider.CompareTag("Fish"))
             {
-                return;
-            }
-            System.Random random = new System.Random();
-            if (fishController != null)
-            {
-                fishController.state = FishState.Confused;
-                fishController.KillAllTween();
+                var fishController = hit.collider.GetComponent<FishController>();
+                Debug.Log("SquidEffect");
+                if (fishController.state != FishState.Moving)
+                {
+                    return;
+                }
+                System.Random random = new System.Random();
+                if (fishController != null)
+                {
+                    fishController.state = FishState.Confused;
+                    fishController.KillAllTween();
+                }
             }
         }
     }

@@ -55,6 +55,7 @@ namespace Factory
         public float cost;
         public float size;
         public DropType dropType;
+        public float dropSpeed = 1f;
 
         public bool isCustom;
 
@@ -70,6 +71,7 @@ namespace Factory
             dropType = other.dropType;
             size = other.size;
             mergeableItems = other.mergeableItems;
+            dropSpeed = other.dropSpeed;
         }
     }
 

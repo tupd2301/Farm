@@ -111,7 +111,7 @@ namespace Factory
         {
             moveTween = null;
             transform
-                .DOLocalMoveY(-6f, 24f)
+                .DOLocalMoveY(-6f, 24f / itemData.dropSpeed)
                 .OnComplete(async () =>
                 {
                     await Task.Delay(1000);
@@ -125,7 +125,7 @@ namespace Factory
 
             // Create the zigzag sequence
             moveTween = transform
-                .DOLocalMoveY(-6f, 15f)
+                .DOLocalMoveY(-6f, 15f / itemData.dropSpeed)
                 .OnComplete(async () =>
                 {
                     await Task.Delay(1000);
