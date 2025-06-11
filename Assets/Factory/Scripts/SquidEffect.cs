@@ -12,23 +12,23 @@ public class SquidEffect : MonoBehaviour
 
     public float duration = 1f;
 
-    public void OnTriggerEnter2D(Collider2D other)
+    public void Update()
     {
-        if (other.CompareTag("Fish"))
+        //raycast to find fish
+        RaycastHit2D hit = Physics2D.CircleCast(transform.position, range, Vector2.zero);
+        if (hit.collider != null && hit.collider.CompareTag("Fish"))
         {
-            var fishController = other.GetComponent<FishController>();
+            var fishController = hit.collider.GetComponent<FishController>();
+            Debug.Log("SquidEffect");
+            if (fishController.state != FishState.Moving)
+            {
+                return;
+            }
             System.Random random = new System.Random();
             if (fishController != null)
             {
-                fishController.targetPosition =
-                    transform.position
-                    + new Vector3(
-                        random.Next(-(int)(range * 0.5f), (int)(range * 0.5f)),
-                        random.Next(-(int)(range * 0.5f), (int)(range * 0.5f)),
-                        0
-                    );
+                fishController.state = FishState.Confused;
                 fishController.KillAllTween();
-                fishController.Move();
             }
         }
     }

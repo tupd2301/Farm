@@ -6522,7 +6522,7 @@ MonoBehaviour:
   targetPosition: {x: 0, y: 0, z: 0}
   _animator: {fileID: 5125848578760376250}
   isAttacking: 0
-  attackTime: 15
+  attackTime: 7
 --- !u!1 &5369984674073236874
 GameObject:
   m_ObjectHideFlags: 0

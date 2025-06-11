@@ -40,3 +40,12 @@ MonoBehaviour:
     level: 1
     baseValue: 1
     weight: 5
+  - id: 3
+    itemName: Food3
+    iconName: F3
+    tickValue: 1
+    maxValue: 5
+    cost: 12
+    level: 1
+    baseValue: 1
+    weight: 5

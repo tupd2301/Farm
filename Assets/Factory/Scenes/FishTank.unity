@@ -1291,7 +1291,7 @@ MonoBehaviour:
     prefab: {fileID: 7311457677934844056, guid: cdcf4d360cb6f46a7ac3bcf235f49d76, type: 3}
     amount: 10
   - id: Ink
-    prefab: {fileID: 3672966584711528427, guid: 287688f0ab8dc45488c79c39b7d375a2, type: 3}
+    prefab: {fileID: 7097720091373961796, guid: d99968058f57a484c8d83b75bd4af8a3, type: 3}
     amount: 3
 --- !u!1 &348391488
 GameObject:

@@ -181,7 +181,7 @@ namespace Factory
                 if (hit.collider != null && hit.collider.CompareTag("Item"))
                 {
                     ItemController item = hit.collider.GetComponent<ItemController>();
-                    if (item.transform.position.y > -2)
+                    if (item.transform.position.y > -0.5f)
                     {
                         continue;
                     }
@@ -364,5 +364,6 @@ namespace Factory
         Attacking,
         Dead,
         Full,
+        Confused,
     }
 }

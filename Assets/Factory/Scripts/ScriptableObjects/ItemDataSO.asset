@@ -31,3 +31,12 @@ MonoBehaviour:
     dropType: 0
     isCustom: 0
     mergeableItems: []
+  - itemId: 2
+    gearId: 3
+    itemName: Food3
+    iconName: F3_Item
+    cost: 1
+    size: 1
+    dropType: 0
+    isCustom: 0
+    mergeableItems: []

@@ -39,8 +39,7 @@ public class SquidController : FishController
     public override void Move()
     {
         System.Random random = new System.Random();
-        int randomIndex = random.Next(0, 3);
-        if (randomIndex == 1 && !isAttacking)
+        if (!isAttacking)
         {
             isAttacking = true;
             _animator.Play("Attack");
@@ -56,7 +55,7 @@ public class SquidController : FishController
         if (targetPosition == transform.position)
         {
             float randomX = random.Next(-30, 30) * 0.1f;
-            float randomY = random.Next(-40, -15) * 0.1f;
+            float randomY = random.Next(-40, -20) * 0.1f;
             targetPosition = new Vector3(randomX, randomY, 0);
         }
         base.Move();

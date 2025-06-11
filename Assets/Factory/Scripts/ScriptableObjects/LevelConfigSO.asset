@@ -21,7 +21,7 @@ MonoBehaviour:
     initialLevelCurrency: 230
     dayConfigurations:
     - dayNumber: 1
-      numberOfFishes: 1
+      numberOfFishes: 6
       fishConfigs:
       - fishType: 6
         amount: 1
@@ -35,6 +35,23 @@ MonoBehaviour:
           timeDecreasePerTick: 0
           fishPrefabName: Squid
           isBoss: 1
+          sprites:
+          - percentHP: 100
+            sprite: {fileID: 21300000, guid: ddef03920a28e4a8ab346c5de2de91df, type: 3}
+          depth: 0
+          moveArea: 0
+      - fishType: 0
+        amount: 5
+        fishConfig:
+          fishType: 0
+          weight: 1
+          fishCurrencyValue: 1
+          patienceValue: 5
+          dropCoinValue: 1
+          percentDecrease: 2
+          timeDecreasePerTick: 0
+          fishPrefabName: Fish
+          isBoss: 0
           sprites:
           - percentHP: 100
             sprite: {fileID: 21300000, guid: ddef03920a28e4a8ab346c5de2de91df, type: 3}
