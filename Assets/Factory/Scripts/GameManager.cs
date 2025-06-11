@@ -66,7 +66,7 @@ namespace Factory
             currentLevel = 0;
             _currentLevelConfig = GetCurrentLevelConfig();
 
-            homeUI = AppManager.Instance.ShowSafeTopUI<HomeUI>("Factory/HomeUI");
+            homeUI = AppManager.Instance.ShowSafeOverlayUI<HomeUI>("Factory/HomeUI");
             if (homeUI == null)
             {
                 return;
@@ -148,8 +148,8 @@ namespace Factory
 
         public async Task NextLevel()
         {
-            FishManager.Instance.ClearFishes();
             await Task.Delay(2000);
+            FishManager.Instance.ClearFishes();
             isStop = true;
             currentLevel++;
             Debug.Log($"NextLevel {currentLevel}");
@@ -165,8 +165,8 @@ namespace Factory
 
         public async Task ShowWinPanel()
         {
-            FishManager.Instance.ClearFishes();
             await Task.Delay(2000);
+            FishManager.Instance.ClearFishes();
             isStop = true;
             Debug.Log($"ShowWinPanel");
             await homeUI.ShowWinPanel();
@@ -208,6 +208,14 @@ namespace Factory
                 {
                     gear.Rotate();
                 }
+            }
+        }
+
+        public void SetFillAllGearsInShop()
+        {
+            foreach (var gear in _gearControllers)
+            {
+                gear.FillItemIcon(1);
             }
         }
 
@@ -305,7 +313,7 @@ namespace Factory
                         )
                         .GetComponent<GearController>();
                     _gearControllers.Add(gearController);
-                    if ((i % 2 == 0 && j % 2 == 1) || (i % 2 == 1 && j % 2 == 0))
+                    if ((i % 2 == 0 && j % 2 == 0) || (i % 2 == 1 && j % 2 == 1))
                     {
                         gearController.startAngle = (45 / 2f);
                     }
@@ -607,6 +615,11 @@ namespace Factory
         public ItemData GetItemDataByItemID(int id)
         {
             return _itemDataSO.itemDataList.Find(item => item.itemId == id);
+        }
+
+        public GearData GetGearDataByID(int id)
+        {
+            return _gearDataSO.gearDataList.Find(gear => gear.id == id);
         }
     }
 }

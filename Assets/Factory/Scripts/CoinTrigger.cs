@@ -18,7 +18,7 @@ namespace Factory
         public void OnPointerEnter(PointerEventData eventData)
         {
             Debug.Log("OnPointerEnter");
-            coinController.OnClick();
+            // coinController.OnClick();
         }
     }
 }

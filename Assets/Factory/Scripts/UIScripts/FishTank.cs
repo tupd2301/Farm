@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Athena.Common.UI;
 using DG.Tweening;
 using UnityEngine;
 using UnityEngine.U2D;
@@ -29,6 +30,9 @@ namespace Factory
         private List<Vector3> _basePoints;
         private float _time;
 
+        public Transform _bottom;
+        public Transform _bottomCollider;
+
         void Start()
         {
             // Store the original points as base positions
@@ -40,6 +44,10 @@ namespace Factory
                     _basePoints.Add(_spriteShapeController.spline.GetPosition(i));
                 }
             }
+            Vector3 bottomPosition = _bottom.transform.position;
+            Vector3 screenPosition = GameManager.Instance.mainCamera.WorldToScreenPoint(bottomPosition);
+            Vector3 worldPosition = GameManager.Instance.mainCamera.ScreenToWorldPoint(screenPosition);
+            _bottomCollider.position = worldPosition;
         }
 
         void Update()

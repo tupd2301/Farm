@@ -52,14 +52,12 @@ namespace Factory
             CancelInvoke(nameof(SetMergeable));
             CancelInvoke(nameof(SetGravityInAir));
             CancelInvoke(nameof(SetGravityInLiquid));
+            CancelInvoke(nameof(CollectItem));
 
             // Reset constraints and visibility
             UnfreezeConstrain();
             _itemIcon.color = new Color(1, 1, 1, 1);
             _itemIcon.gameObject.SetActive(true);
-
-            // Set up initial state
-            Invoke(nameof(SetMergeable), 1f);
             SetGravityInAir();
         }
 
@@ -95,6 +93,10 @@ namespace Factory
 
             // Kill any existing move tween
             moveTween?.Kill();
+            transform
+                .DORotate(new Vector3(0, 0, 90), 4f, RotateMode.LocalAxisAdd)
+                .SetEase(Ease.Linear)
+                .SetLoops(-1, LoopType.Yoyo);
             if (itemData.dropType == DropType.Leaf)
             {
                 await SetLeafDrop();
@@ -108,30 +110,38 @@ namespace Factory
         public async Task SetStandardDrop()
         {
             moveTween = null;
-            GetComponent<Rigidbody2D>().gravityScale = 0.05f;
+            transform
+                .DOLocalMoveY(-6f, 24f)
+                .OnComplete(async () =>
+                {
+                    await Task.Delay(1000);
+                    await CollectItem();
+                });
         }
 
         public async Task SetLeafDrop()
         {
-            bool moveLeft = true;
+            bool moveLeft = Random.Range(0, 2) == 0;
 
-            transform
-                .DORotate(new Vector3(0, 0, 90), 4f, RotateMode.LocalAxisAdd)
-                .SetEase(Ease.Linear)
-                .SetLoops(-1, LoopType.Yoyo);
             // Create the zigzag sequence
             moveTween = transform
-                .DOLocalMoveY(transform.localPosition.y - 2f, 3f)
-                .SetEase(leafDropCurve)
-                .SetLoops(5, LoopType.Incremental)
+                .DOLocalMoveY(-6f, 15f)
                 .OnComplete(async () =>
                 {
+                    await Task.Delay(1000);
                     await CollectItem();
                 });
             for (int i = 0; i < 5; i++)
             {
+                if (transform.localPosition.y <= -6)
+                {
+                    moveTween.Kill();
+                    await Task.Delay(1000);
+                    await CollectItem();
+                    return;
+                }
                 await transform
-                    .DOLocalMoveX(transform.localPosition.x + (moveLeft ? -1.5f : 1.5f), 1.5f)
+                    .DOLocalMoveX(transform.localPosition.x + (moveLeft ? -0.5f : 0.5f), 1.5f)
                     .SetLoops(2, LoopType.Yoyo)
                     .AsyncWaitForCompletion();
                 moveLeft = !moveLeft;
@@ -145,7 +155,12 @@ namespace Factory
                 return;
             }
             await Task.Delay(2000);
+            if (isCollected)
+            {
+                return;
+            }
             isCollected = true;
+            await _itemIcon.DOFade(0, 1f).AsyncWaitForCompletion();
             GameManager.Instance.CollectItem(this);
         }
 
@@ -199,7 +214,7 @@ namespace Factory
             {
                 UsingRaycast();
             }
-            if (transform.localPosition.y <= -7 && GetComponent<Collider2D>().isTrigger)
+            if (transform.position.y <= -5 && GetComponent<Collider2D>().isTrigger)
             {
                 GetComponent<Rigidbody2D>().gravityScale = 0f;
                 GetComponent<Collider2D>().isTrigger = false;
@@ -231,7 +246,7 @@ namespace Factory
                     if (hit.collider.CompareTag("Liquid") && !isInLiquid)
                     {
                         isInLiquid = true;
-                        Invoke(nameof(SetGravityInLiquid), 0.5f);
+                        SetGravityInLiquid();
                         FreezeConstrain();
                     }
                     if (hit.collider.CompareTag("Item") && !isCollected && mergeable)

@@ -18,6 +18,9 @@ namespace Factory
         private GameObject _shopPopup;
 
         [SerializeField]
+        private RecycleBin _recycleBin;
+
+        [SerializeField]
         private Button _startButton;
 
         [SerializeField]
@@ -78,6 +81,18 @@ namespace Factory
             SetLockRerollButton(GameManager.Instance.CheckGold(5));
         }
 
+        public void OffsetGearItemContainer()
+        {
+            if (GameManager.Instance.GameState.CurrentState == GameStateType.Main)
+            {
+                _gearItemContainer.GetComponent<RectTransform>().DOAnchorPosY(-500, 0.5f);
+            }
+            if (GameManager.Instance.GameState.CurrentState == GameStateType.Shop)
+            {
+                _gearItemContainer.GetComponent<RectTransform>().DOAnchorPosY(-550, 0.5f);
+            }
+        }
+
         public void SetLockRerollButton(bool state)
         {
             if (_isLockFirstOpenShop)
@@ -90,11 +105,13 @@ namespace Factory
         public void ShowShopPopup()
         {
             _shopPopup.SetActive(true);
+            _recycleBin.gameObject.SetActive(true);
         }
 
         public void HideShopPopup()
         {
             _shopPopup.SetActive(false);
+            _recycleBin.gameObject.SetActive(false);
         }
         public void UpdateDay()
         {
@@ -245,10 +262,10 @@ namespace Factory
         public void UpdatePanelImage(ShopItem shopItem, bool isPurchased = false)
         {
             shopItem.panelImage.color = isPurchased
-                ? new Color(0.15f, 0.15f, 0.15f, 1)
+                ? new Color(0.6f, 0.6f, 0.6f, 1)
                 : new Color(1, 1, 1, 1);
             shopItem.priceImage.color = isPurchased
-                ? new Color(0.15f, 0.15f, 0.15f, 1)
+                ? new Color(0.6f, 0.6f, 0.6f, 1)
                 : new Color(1, 1, 1, 1);
         }
 

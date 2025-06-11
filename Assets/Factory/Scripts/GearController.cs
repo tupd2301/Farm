@@ -102,7 +102,7 @@ namespace Factory
         public void SetGearData(GearData data)
         {
             currentTotalTickValue = 0;
-            FillItemIcon(0);
+            FillItemIcon(1);
             if (gearData == null)
             {
                 gearData = new GearData();
@@ -149,7 +149,7 @@ namespace Factory
 
         public void SetGear(int gear)
         {
-            if(isHead)
+            if (isHead)
             {
                 _gearIcon.sprite = _gear1;
                 return;
@@ -193,9 +193,6 @@ namespace Factory
 
         public void Rotate(float angle, float Amplifier)
         {
-            if (GameManager.Instance.GameState.CurrentState != GameStateType.Main)
-                return;
-
             _gearIcon.transform.DOComplete();
             _gearIcon
                 .transform.DORotate(new Vector3(0, 0, angle + startAngle), 0.1f)
@@ -212,6 +209,8 @@ namespace Factory
             {
                 return;
             }
+            if (GameManager.Instance.GameState.CurrentState != GameStateType.Main)
+                return;
             float AmplifierToTick = Amplifier >= gearData.maxValue ? 0 : Amplifier;
             float AmplifierToCost =
                 Amplifier >= gearData.maxValue ? Amplifier - gearData.maxValue : 0;
@@ -244,13 +243,14 @@ namespace Factory
             {
                 if (gear.gearData.id == 0)
                 {
-                    Amplifier +=
-                        (1 + (0.2f * Mathf.Pow(2, gear.gearData.level - 1)))
-                        * gear.gearData.baseValue;
+                    if (Amplifier == 0)
+                    {
+                        Amplifier = 1;
+                    }
+                    Amplifier += ((0.2f * Mathf.Pow(2, gear.gearData.level - 1)));
                 }
             }
-            if (GameManager.Instance.GameState.CurrentState != GameStateType.Main)
-                return;
+            Amplifier *= GameManager.Instance.GetGearDataByID(0).baseValue;
             Debug.Log("Amplifier: " + Amplifier);
             foreach (var gear in allConnectedGears)
             {
@@ -311,7 +311,7 @@ namespace Factory
             if (!droppedGear)
                 return;
 
-            if (isHead|| isInShop || droppedGear == this || droppedGear.gearData == null)
+            if (isHead || isInShop || droppedGear == this || droppedGear.gearData == null)
                 return;
 
             if (CanMergeAmplifierGears(droppedGear))
@@ -416,11 +416,8 @@ namespace Factory
                 .GetComponent<GearController>();
             _tempGear.transform.SetParent(GameManager.Instance.HomeUI.TempContainer.transform);
             _tempGear.transform.localScale = Vector3.zero;
-            _tempGear.GetComponent<RectTransform>().sizeDelta = Vector2.one * 110;
-            _tempGear
-                .GetComponent<RectTransform>()
-                .DOScale(Vector3.one * 0.8f, 0.2f)
-                .SetEase(Ease.InBack);
+            _tempGear.GetComponent<RectTransform>().sizeDelta = Vector2.one * 190;
+            _tempGear.GetComponent<RectTransform>().DOScale(Vector3.one, 0.2f).SetEase(Ease.InBack);
 
             // Set the temporary gear's properties
             _tempGear._gearIcon.raycastTarget = false;

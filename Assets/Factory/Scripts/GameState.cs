@@ -58,6 +58,7 @@ namespace Factory
                         FishManager.Instance.isFishClosing = false;
                         FishManager.Instance.OpenGate();
                         GameManager.Instance.isStop = false;
+                        GameManager.Instance.homeUI.OffsetGearItemContainer();
                     }
                     break;
 
@@ -68,6 +69,8 @@ namespace Factory
                         GameManager.Instance.homeUI.ShowShopPopup();
                         GameManager.Instance.RandomGearsInShop();
                         FishManager.Instance.isFishClosing = true;
+                        GameManager.Instance.homeUI.OffsetGearItemContainer();
+                        GameManager.Instance.SetFillAllGearsInShop();
                     }
                     break;
             }

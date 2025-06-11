@@ -37,16 +37,16 @@ namespace Factory
     public class FishController : MonoBehaviour
     {
         [SerializeField]
-        private FishTweenParams tweenParams;
+        protected FishTweenParams tweenParams;
 
         public Canvas _canvas;
         public Transform _fishBody;
 
         [SerializeField]
-        private SpriteRenderer _hpBarMask;
+        protected SpriteRenderer _hpBarMask;
 
         [SerializeField]
-        private SpriteRenderer _spriteRenderer;
+        protected SpriteRenderer _spriteRenderer;
 
         public SpriteMask _spriteMask;
         public FishState state = FishState.Idle;
@@ -61,20 +61,35 @@ namespace Factory
 
         public Tween _moveTween;
 
-        private int _indexSprite;
+        protected int _indexSprite;
 
-        private ItemController _currentTargetItem;
+        protected ItemController _currentTargetItem;
+
+        protected bool _lockTarget = false;
+
 
         public void Awake()
         {
             _canvas = GetComponentInChildren<Canvas>();
-            _canvas.worldCamera = GameManager.Instance.mainCamera;
             _currentTargetItem = null;
+            if (_canvas != null)
+            {
+                _canvas.worldCamera = GameManager.Instance.mainCamera;
+            }
+        }
+
+        public void KillAllTween()
+        {
+            _moveTween.Kill();
         }
 
         public void SetSprite(int index)
         {
-            if (index == _indexSprite)
+            if (
+                index == _indexSprite
+                || index >= fishConfig.sprites.Count
+                || fishConfig.sprites[index].sprite == null
+            )
             {
                 return;
             }
@@ -98,8 +113,13 @@ namespace Factory
             _spriteRenderer.material.SetFloat("_SwaySpeed", 1);
             _spriteRenderer.material.SetColor("_Color", new Color32(255, 255, 255, 255));
             _currentTargetItem = null;
+            _hpBarMask.gameObject.SetActive(true);
 
             UpdateHpBar();
+            if (fishConfig.isBoss)
+            {
+                return;
+            }
             Invoke(nameof(DecreaseHPByTime), 1f);
         }
 
@@ -119,7 +139,7 @@ namespace Factory
             }
         }
 
-        public void DecreaseHPByTime()
+        public virtual void DecreaseHPByTime()
         {
             currentTotalTickValue -=
                 fishConfig.fishCurrencyValue * fishConfig.percentDecrease / 100;
@@ -129,11 +149,13 @@ namespace Factory
                 state = FishState.Dead;
                 _moveTween.Kill();
                 FlipWithDirection(new Vector3(-1, -1, 1));
+                _hpBarMask.gameObject.SetActive(false);
+                _spriteRenderer.material.DOFade(0, 3f);
                 transform
-                    .DOLocalMoveY(6, 3f)
+                    .DOLocalMoveY(5, 3f)
                     .OnComplete(() =>
                     {
-                        transform.DOScale(0, 0.2f);
+                        gameObject.SetActive(false);
                     });
                 _spriteRenderer.material.SetFloat("_SwaySpeed", 0);
                 FishManager.Instance.CheckWinLose();
@@ -145,15 +167,10 @@ namespace Factory
             Invoke(nameof(DecreaseHPByTime), 1f);
         }
 
-        public async Task FindTarget()
+        public virtual async Task FindTarget()
         {
-            if (state != FishState.Moving)
+            if (state != FishState.Moving || fishConfig.isBoss)
             {
-                return;
-            }
-            if (_currentTargetItem != null && !_currentTargetItem.isCollected)
-            {
-                targetPosition = _currentTargetItem.transform.position;
                 return;
             }
             // Use raycast to find items in range
@@ -164,7 +181,7 @@ namespace Factory
                 if (hit.collider != null && hit.collider.CompareTag("Item"))
                 {
                     ItemController item = hit.collider.GetComponent<ItemController>();
-                    if (item.transform.position.y > 0)
+                    if (item.transform.position.y > -2)
                     {
                         continue;
                     }
@@ -196,11 +213,20 @@ namespace Factory
                             currentTotalTickValue += item.itemData.cost;
                             UpdateHpBar();
                             CheckFull();
+                            _lockTarget = false;
                         }
                         else
                         {
-                            targetPosition = item.transform.position;
+                            if (_lockTarget)
+                            {
+                                if (_currentTargetItem != null && _currentTargetItem != item)
+                                {
+                                    continue;
+                                }
+                            }
                             _currentTargetItem = item;
+                            targetPosition = item.transform.position;
+                            _lockTarget = true;
                             Move();
                         }
                         break;
@@ -213,7 +239,7 @@ namespace Factory
             }
         }
 
-        public void CheckFull()
+        public virtual void CheckFull()
         {
             if (currentTotalTickValue >= fishConfig.fishCurrencyValue)
             {
@@ -245,7 +271,7 @@ namespace Factory
             }
         }
 
-        void Update()
+        public virtual void Update()
         {
             if (state == FishState.Moving)
             {
@@ -253,7 +279,7 @@ namespace Factory
             }
         }
 
-        public void OnClick()
+        public virtual void OnClick()
         {
             if (state == FishState.Moving)
             {
@@ -284,7 +310,7 @@ namespace Factory
             }
         }
 
-        public void Move()
+        public virtual void Move()
         {
             if (state == FishState.Dead || state == FishState.Full)
             {
@@ -292,16 +318,15 @@ namespace Factory
             }
             _moveTween.Kill();
             _moveTween = null;
-            Debug.Log("Move: " + gameObject.name);
             if (targetPosition == transform.position)
             {
                 System.Random random = new System.Random();
-                int randomX = random.Next(-4, 4);
-                int randomY = random.Next(-6, 0);
+                float randomX = random.Next(-30, 30) * 0.1f;
+                float randomY = random.Next(-40, 0) * 0.1f;
                 targetPosition = new Vector3(randomX, randomY, 0);
             }
             float distance = Vector3.Distance(transform.position, targetPosition);
-            float time = distance * 0.5f;
+            float time = distance * 1f;
             Vector3 direction = targetPosition - transform.position;
             Vector3 outputDirection = new Vector3(direction.x > 0 ? 1 : -1, 1, 1);
             FlipWithDirection(outputDirection);
@@ -312,6 +337,7 @@ namespace Factory
                 {
                     if (state == FishState.Moving)
                     {
+                        _lockTarget = false;
                         Move();
                     }
                 });

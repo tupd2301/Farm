@@ -12,9 +12,6 @@ namespace Factory
     {
         public static FishManager Instance;
         public List<FishController> _fishes;
-
-        public GameObject _fishPrefab;
-
         public GameObject _fishParent;
         public GameObject _gate;
 
@@ -40,33 +37,16 @@ namespace Factory
         public void SpawnTextFloating(string text, Vector3 position)
         {
             var textObject = PoolSystem.Instance.GetObject("TextFloating");
-            textObject.transform.SetParent(transform);
-            text = float.Parse(text).ToString("0.0");
+            textObject.transform.SetParent(GameManager.Instance.homeUI.TotalGoldText.transform);
+            text = float.Parse(text).ToString("0");
             var value = float.Parse(text);
-            textObject.GetComponentInChildren<TMP_Text>().text = "+" + text + "$";
+            textObject.GetComponentInChildren<TMP_Text>().text = "+" + text;
             textObject.SetActive(true);
             textObject.transform.localPosition = Vector3.zero;
-            textObject.transform.DOMoveX(position.x, 0).SetEase(Ease.InSine);
-            float moveY = 2;
-            float scale = 1f;
-            if (value > 0 && value < 10)
-            {
-                moveY = 2;
-                scale = 1f;
-            }
-            else if (value >= 10 && value < 100)
-            {
-                moveY = 1;
-                scale = 1.5f;
-            }
-            else if (value >= 100)
-            {
-                moveY = 0.5f;
-                scale = 2f;
-            }
-            textObject.transform.DOScale(Vector3.one * 0.01f * scale, 0.3f).SetEase(Ease.InCirc);
+            textObject.transform.localScale = Vector3.one;
+            float moveY = -50;
             textObject
-                .transform.DOLocalMoveY(moveY, 1f)
+                .transform.DOLocalMoveY(moveY, 0.3f)
                 .SetEase(Ease.InSine)
                 .OnComplete(() =>
                 {
@@ -203,7 +183,10 @@ namespace Factory
                     .SetEase(Ease.OutExpo)
                     .SetLoops(4, LoopType.Yoyo);
                 await Task.Delay(3000);
-                await UpdateFishCountText(GameManager.Instance.GetCurrentDayConfig().maxInPool - _fishes.FindAll(x => x.state == FishState.Dead).Count);
+                await UpdateFishCountText(
+                    GameManager.Instance.GetCurrentDayConfig().maxInPool
+                        - _fishes.FindAll(x => x.state == FishState.Dead).Count
+                );
             }
             else
             {
@@ -222,6 +205,7 @@ namespace Factory
         public async Task SpawnFish(List<FishConfigDay> fishConfigs)
         {
             ClearFishes();
+            System.Random random = new System.Random();
             isFishClosing = false;
             foreach (var fishConfig in fishConfigs)
             {
@@ -236,9 +220,16 @@ namespace Factory
                     {
                         return;
                     }
-                    var fish = Instantiate(_fishPrefab, _fishParent.transform);
+                    var fishPrefab = Resources.Load<GameObject>(
+                        "Prefabs/Fish/" + fishConfig.fishConfig.fishPrefabName
+                    );
+                    var fish = Instantiate(fishPrefab, _fishParent.transform);
                     _fishes.Add(fish.GetComponent<FishController>());
-                    fish.transform.localPosition = new Vector3(_fishMoveDistance, 0, 0);
+                    fish.transform.localPosition = new Vector3(
+                        _fishMoveDistance,
+                        random.Next(2, 6),
+                        0
+                    );
                     fish.transform.DOScale(fish.transform.localScale * 1.5f, 0.5f)
                         .SetEase(Ease.InOutSine)
                         .SetLoops(2, LoopType.Yoyo);
@@ -254,7 +245,10 @@ namespace Factory
 
         public void CheckWinLose()
         {
-            UpdateFishCountText(GameManager.Instance.GetCurrentDayConfig().maxInPool - _fishes.FindAll(x => x.state == FishState.Dead).Count);
+            UpdateFishCountText(
+                GameManager.Instance.GetCurrentDayConfig().maxInPool
+                    - _fishes.FindAll(x => x.state == FishState.Dead && !x.fishConfig.isBoss).Count
+            );
             if (
                 _fishes.FindAll(x => x.state == FishState.Dead).Count
                 >= GameManager.Instance.GetCurrentDayConfig().maxInPool

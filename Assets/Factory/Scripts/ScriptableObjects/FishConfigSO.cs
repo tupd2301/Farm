@@ -96,6 +96,10 @@ namespace Factory
         public float percentDecrease = 0;
         public float timeDecreasePerTick = 0;
 
+        public string fishPrefabName;
+
+        public bool isBoss = false;
+
         public List<FishSpriteByHP> sprites;
 
         [Range(0, 4)]
@@ -116,6 +120,8 @@ namespace Factory
             depth = other.depth;
             moveArea = other.moveArea;
             sprites = other.sprites;
+            fishPrefabName = other.fishPrefabName;
+            isBoss = other.isBoss;
         }
     }
 }

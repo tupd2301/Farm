@@ -18,7 +18,7 @@ MonoBehaviour:
     itemName: Food1
     iconName: F1_Item
     cost: 1
-    size: 1.5
+    size: 1
     dropType: 1
     isCustom: 0
     mergeableItems: []
@@ -27,7 +27,7 @@ MonoBehaviour:
     itemName: Food2
     iconName: F2_Item
     cost: 1
-    size: 1.5
+    size: 1
     dropType: 0
     isCustom: 0
     mergeableItems: []
