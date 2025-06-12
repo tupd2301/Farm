@@ -93,13 +93,32 @@ namespace Factory
             _warningEffect.DOComplete();
             _warningEffect.color = new Color(1, 0.2f, 0.2f, 0);
             _warningEffect.gameObject.SetActive(true);
+            AudioManager.Instance.PlaySound("Warning");
             _warningEffect
                 .DOFade(1, 0.5f)
                 .SetEase(Ease.InSine)
-                .SetLoops(6, LoopType.Yoyo)
+                .SetLoops(2, LoopType.Yoyo)
                 .OnComplete(() =>
                 {
-                    _warningEffect.gameObject.SetActive(false);
+                    AudioManager.Instance.PlaySound("Warning");
+
+                    _warningEffect
+                        .DOFade(1, 0.5f)
+                        .SetEase(Ease.InSine)
+                        .SetLoops(2, LoopType.Yoyo)
+                        .OnComplete(() =>
+                        {
+                            AudioManager.Instance.PlaySound("Warning");
+
+                            _warningEffect
+                                .DOFade(1, 0.5f)
+                                .SetEase(Ease.InSine)
+                                .SetLoops(2, LoopType.Yoyo)
+                                .OnComplete(() =>
+                                {
+                                    _warningEffect.gameObject.SetActive(false);
+                                });
+                        });
                 });
         }
 

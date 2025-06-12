@@ -43,6 +43,7 @@ namespace Factory
                     FishManager.Instance.SpawnTextFloating(value.ToString(), transform.position);
                     GameManager.Instance.AddGold(value);
                     PoolSystem.Instance.ReturnObject(gameObject, "Coin");
+                    AudioManager.Instance.PlaySound("Coin");
                 });
         }
     }

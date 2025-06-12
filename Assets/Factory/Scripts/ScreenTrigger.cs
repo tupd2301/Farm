@@ -47,7 +47,7 @@ public class ScreenTrigger : MonoBehaviour
                 UIManager.Instance.CameraUI, // Use the proper UI camera
                 out localPoint
             );
-
+            AudioManager.Instance.PlaySound("Tap");
             particle.GetComponent<RectTransform>().localPosition = localPoint;
             particle.SetActive(true);
             DOVirtual.DelayedCall(

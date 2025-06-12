@@ -229,6 +229,7 @@ namespace Factory
                             item.isCollected = true;
                             GameManager.Instance.CollectItem(item);
                             currentTotalTickValue += item.itemData.cost;
+                            AudioManager.Instance.PlaySound("Eat");
                             UpdateHpBar();
                             CheckFull();
                             _lockTarget = false;
@@ -273,6 +274,7 @@ namespace Factory
                 happyVFX.transform.localPosition = transform.position;
                 happyVFX.SetActive(true);
                 PoolSystem.Instance.ReturnObject(happyVFX, "HappyVFX", 1f);
+                AudioManager.Instance.PlaySound("Full");
 
                 var coin = PoolSystem.Instance.GetObject("Coin");
                 coin.transform.position = transform.position;
