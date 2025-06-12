@@ -115,7 +115,7 @@ public class SquidController : FishController
                 .OnComplete(() =>
                 {
                     float randomX = random.Next(-30, 30) * 0.1f;
-                    int moveArea = (int)(fishConfig.moveArea) * 10;
+                    int moveArea = (int)(fishConfig.moveArea * 10);
                     moveArea = Mathf.Abs(moveArea);
                     float randomY = fishConfig.depth + random.Next(-moveArea, moveArea) * 0.1f;
                     targetPosition = new Vector3(randomX, randomY, 0);
@@ -126,7 +126,7 @@ public class SquidController : FishController
         if (targetPosition == transform.position)
         {
             float randomX = random.Next(-30, 30) * 0.1f;
-            int moveArea = (int)(fishConfig.moveArea) * 10;
+            int moveArea = (int)(fishConfig.moveArea * 10);
             moveArea = Mathf.Abs(moveArea);
             float randomY = fishConfig.depth + random.Next(-moveArea, moveArea) * 0.1f;
             targetPosition = new Vector3(randomX, randomY, 0);
