@@ -36,6 +36,33 @@ public class SquidController : FishController
         }
     }
 
+    public override void Init(FishConfig fishConfig, int index)
+    {
+        _hpBarMask.sortingOrder = 100 + index;
+        hpBar.GetComponent<SpriteRenderer>().sortingOrder = 100 + index + 1;
+        _spriteMask.backSortingOrder = 100 + index;
+        _spriteMask.frontSortingOrder = 100 + index + 1;
+        this.fishConfig = fishConfig;
+        currentTotalTickValue = 0;
+        state = FishState.Moving;
+        SetSprite(0);
+        targetPosition = transform.position;
+        Move();
+        currentTotalTickValue = fishConfig.fishCurrencyValue;
+        _spriteRenderer.material.SetFloat("_SwaySpeed", 1);
+        _spriteRenderer.material.SetColor("_Color", new Color32(255, 255, 255, 255));
+        _currentTargetItem = null;
+        _hpBarMask.gameObject.SetActive(true);
+
+        UpdateHpBar();
+    }
+
+    public void OnEnable()
+    {
+        isAttacking = true;
+        Invoke(nameof(StopAttack), attackTime);
+    }
+
     public override void Move()
     {
         System.Random random = new System.Random();
@@ -46,11 +73,30 @@ public class SquidController : FishController
             var particleSystem = PoolSystem.Instance.GetObject("Ink");
             particleSystem.transform.position = transform.position;
             var main = particleSystem.GetComponent<ParticleSystem>().main;
-            main.startLifetime = attackTime;
             particleSystem.SetActive(true);
             particleSystem.GetComponent<ParticleSystem>().Play();
             PoolSystem.Instance.ReturnObject(particleSystem, "Ink", attackTime);
             Invoke(nameof(StopAttack), attackTime);
+            if (transform.localPosition.x + 5 > 4 || transform.localPosition.x - 5 < -4)
+            {
+                FlipWithDirection(new Vector3(_fishBody.localScale.x * -1, 1, 1));
+            }
+            FlipWithDirection(new Vector3(_fishBody.localScale.x * -1, 1, 1));
+            transform
+                .DOLocalMoveX(
+                    transform.localPosition.x + 3 * -_fishBody.transform.localScale.x,
+                    0.5f
+                )
+                .SetEase(Ease.InOutSine)
+                .SetDelay(0.3f)
+                .OnComplete(() =>
+                {
+                    float randomX = random.Next(-30, 30) * 0.1f;
+                    float randomY = random.Next(-40, -20) * 0.1f;
+                    targetPosition = new Vector3(randomX, randomY, 0);
+                    Move();
+                });
+            return;
         }
         if (targetPosition == transform.position)
         {

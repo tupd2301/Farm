@@ -64,6 +64,7 @@ namespace Factory
         protected int _indexSprite;
 
         protected ItemController _currentTargetItem;
+        public SpriteRenderer spriteRenderer => _spriteRenderer;
 
         protected bool _lockTarget = false;
 
@@ -88,7 +89,7 @@ namespace Factory
             _spriteRenderer.sprite = fishConfig.sprites[index].sprite;
         }
 
-        public void Init(FishConfig fishConfig, int index)
+        public virtual void Init(FishConfig fishConfig, int index)
         {
             _hpBarMask.sortingOrder = 100 + index;
             hpBar.GetComponent<SpriteRenderer>().sortingOrder = 100 + index + 1;
@@ -143,7 +144,7 @@ namespace Factory
                 _hpBarMask.gameObject.SetActive(false);
                 _spriteRenderer.material.DOFade(0, 3f);
                 transform
-                    .DOLocalMoveY(5, 3f)
+                    .DOMoveY(-0.5f, 3f)
                     .OnComplete(() =>
                     {
                         gameObject.SetActive(false);
@@ -183,7 +184,7 @@ namespace Factory
                         && item.gameObject.activeSelf
                     )
                     {
-                        if (Vector3.Distance(transform.position, item.transform.position) < 1f)
+                        if (Vector3.Distance(transform.position, item.transform.position) < 0.5f)
                         {
                             Debug.Log("Collect Item");
                             if (
@@ -300,7 +301,6 @@ namespace Factory
                     });
             }
         }
-
         public virtual void Move()
         {
             if (state == FishState.Dead || state == FishState.Full)
