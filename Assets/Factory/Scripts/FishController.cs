@@ -334,7 +334,7 @@ namespace Factory
             if (targetPosition == transform.position)
             {
                 System.Random random = new System.Random();
-                float randomX = random.Next(-40, 40) * 0.1f;
+                float randomX = random.Next(-30, 30) * 0.1f;
                 int moveArea = (int)(fishConfig.moveArea) * 10;
                 moveArea = Mathf.Abs(moveArea);
                 float randomY = fishConfig.depth + random.Next(-moveArea, moveArea) * 0.1f;
