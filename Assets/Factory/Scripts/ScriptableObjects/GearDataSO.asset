@@ -34,7 +34,7 @@ MonoBehaviour:
   - id: 2
     itemName: Food2
     iconName: F2
-    tickValue: 1
+    tickValue: 1.2
     maxValue: 5
     cost: 12
     level: 1
@@ -43,7 +43,7 @@ MonoBehaviour:
   - id: 3
     itemName: Food3
     iconName: F3
-    tickValue: 1
+    tickValue: 0.8
     maxValue: 5
     cost: 12
     level: 1
