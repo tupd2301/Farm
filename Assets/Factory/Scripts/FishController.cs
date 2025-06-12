@@ -63,6 +63,8 @@ namespace Factory
 
         protected int _indexSprite;
 
+        public List<GameObject> _lines;
+
         protected ItemController _currentTargetItem;
         public SpriteRenderer spriteRenderer => _spriteRenderer;
 
@@ -94,7 +96,8 @@ namespace Factory
             _hpBarMask.sortingOrder = 100 + index;
             hpBar.GetComponent<SpriteRenderer>().sortingOrder = 100 + index + 1;
             _spriteMask.backSortingOrder = 100 + index;
-            _spriteMask.frontSortingOrder = 100 + index + 1;
+            _spriteMask.frontSortingOrder = 100 + index + 2;
+            SetLinesSortingOrder(100 + index + 2);
             this.fishConfig = fishConfig;
             currentTotalTickValue = 0;
             state = FishState.Moving;
@@ -115,11 +118,19 @@ namespace Factory
             Invoke(nameof(DecreaseHPByTime), 1f);
         }
 
+        protected void SetLinesSortingOrder(int index)
+        {
+            foreach (var line in _lines)
+            {
+                line.GetComponent<SpriteRenderer>().sortingOrder = index;
+            }
+        }
+
         public void UpdateHpBar()
         {
             float percent01 = currentTotalTickValue / fishConfig.fishCurrencyValue;
-            hpBar.localScale = new Vector3(percent01, 1, 1);
-            if (percent01 > 0.3f)
+            hpBar.localScale = new Vector3(percent01 * 3.72f, 1, 1);
+            if (percent01 > 0.2f)
             {
                 hpBar.GetComponent<SpriteRenderer>().color = new Color32(160, 200, 0, 255);
                 SetSprite(0);
@@ -127,6 +138,14 @@ namespace Factory
             else
             {
                 hpBar.GetComponent<SpriteRenderer>().color = new Color32(210, 50, 20, 255);
+                _spriteRenderer.material.DOComplete();
+                _spriteRenderer
+                    .material.DOColor(new Color32(255, 125, 125, 255), 0.1f)
+                    .SetLoops(2, LoopType.Yoyo)
+                    .OnComplete(() =>
+                    {
+                        _spriteRenderer.material.DOColor(new Color32(255, 255, 255, 255), 0.1f);
+                    });
                 // SetSprite(1);
             }
         }
@@ -135,6 +154,7 @@ namespace Factory
         {
             currentTotalTickValue -=
                 fishConfig.fishCurrencyValue * fishConfig.percentDecrease / 100;
+
             UpdateHpBar();
             if (currentTotalTickValue < 0)
             {
@@ -301,6 +321,7 @@ namespace Factory
                     });
             }
         }
+
         public virtual void Move()
         {
             if (state == FishState.Dead || state == FishState.Full)
@@ -313,11 +334,12 @@ namespace Factory
             {
                 System.Random random = new System.Random();
                 float randomX = random.Next(-30, 30) * 0.1f;
-                float randomY = random.Next(-40, 0) * 0.1f;
+                int moveArea = (int)(fishConfig.depth * fishConfig.moveArea);
+                float randomY = random.Next(-moveArea, moveArea) * 0.1f;
                 targetPosition = new Vector3(randomX, randomY, 0);
             }
             float distance = Vector3.Distance(transform.position, targetPosition);
-            float time = distance * 1f;
+            float time = distance * fishConfig.speed;
             Vector3 direction = targetPosition - transform.position;
             Vector3 outputDirection = new Vector3(direction.x > 0 ? 1 : -1, 1, 1);
             FlipWithDirection(outputDirection);

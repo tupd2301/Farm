@@ -44,7 +44,7 @@ namespace Factory
             textObject.SetActive(true);
             textObject.transform.localPosition = Vector3.zero;
             textObject.transform.localScale = Vector3.one;
-            float moveY = -50;
+            float moveY = 50;
             textObject
                 .transform.DOLocalMoveY(moveY, 0.3f)
                 .SetEase(Ease.InSine)
@@ -226,7 +226,7 @@ namespace Factory
                     var fish = Instantiate(fishPrefab, _fishParent.transform);
                     _fishes.Add(fish.GetComponent<FishController>());
                     fish.transform.localPosition = new Vector3(
-                        _fishMoveDistance,
+                        _fishMoveDistance * (random.Next(0, 2) == 0 ? -1 : 1),
                         random.Next(2, 6),
                         0
                     );

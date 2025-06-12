@@ -13,10 +13,13 @@ public class SquidController : FishController
 
     public float attackTime = 15f;
 
+    public List<SpriteRenderer> _spriteRenderers;
+
     public void DecreaseHPByClick()
     {
         // base.DecreaseHPByTime();
         currentTotalTickValue -= fishConfig.fishCurrencyValue * fishConfig.percentDecrease / 100;
+        SetColor(new Color32(255, 125, 125, 255));
         UpdateHpBar();
         if (currentTotalTickValue < 0)
         {
@@ -36,12 +39,36 @@ public class SquidController : FishController
         }
     }
 
+    public void SetColor(Color color)
+    {
+        _spriteRenderer.DOComplete();
+        _spriteRenderer
+            .DOColor(new Color32(255, 125, 125, 255), 0.1f)
+            .SetLoops(2, LoopType.Yoyo)
+            .OnComplete(() =>
+            {
+                _spriteRenderer.DOColor(new Color32(255, 255, 255, 255), 0.1f);
+            });
+        foreach (var spriteRenderer in _spriteRenderers)
+        {
+            spriteRenderer.DOComplete();
+            spriteRenderer
+                .DOColor(new Color32(255, 125, 125, 255), 0.1f)
+                .SetLoops(2, LoopType.Yoyo)
+                .OnComplete(() =>
+                {
+                    spriteRenderer.DOColor(new Color32(255, 255, 255, 255), 0.1f);
+                });
+        }
+    }
+
     public override void Init(FishConfig fishConfig, int index)
     {
         _hpBarMask.sortingOrder = 100 + index;
         hpBar.GetComponent<SpriteRenderer>().sortingOrder = 100 + index + 1;
         _spriteMask.backSortingOrder = 100 + index;
-        _spriteMask.frontSortingOrder = 100 + index + 1;
+        _spriteMask.frontSortingOrder = 100 + index + 2;
+        SetLinesSortingOrder(100 + index + 2);
         this.fishConfig = fishConfig;
         currentTotalTickValue = 0;
         state = FishState.Moving;
@@ -92,7 +119,8 @@ public class SquidController : FishController
                 .OnComplete(() =>
                 {
                     float randomX = random.Next(-30, 30) * 0.1f;
-                    float randomY = random.Next(-40, -20) * 0.1f;
+                    int moveArea = (int)(fishConfig.depth * fishConfig.moveArea);
+                    float randomY = random.Next(-moveArea, moveArea) * 0.1f;
                     targetPosition = new Vector3(randomX, randomY, 0);
                     Move();
                 });
@@ -101,7 +129,8 @@ public class SquidController : FishController
         if (targetPosition == transform.position)
         {
             float randomX = random.Next(-30, 30) * 0.1f;
-            float randomY = random.Next(-40, -20) * 0.1f;
+            int moveArea = (int)(fishConfig.depth * fishConfig.moveArea);
+            float randomY = random.Next(-moveArea, moveArea) * 0.1f;
             targetPosition = new Vector3(randomX, randomY, 0);
         }
         base.Move();
@@ -117,6 +146,7 @@ public class SquidController : FishController
         // base.OnClick();
         Debug.Log("Squid OnClick");
         DecreaseHPByClick();
+        Move();
     }
 
     public override async Task FindTarget() { }
