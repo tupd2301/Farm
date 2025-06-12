@@ -334,7 +334,7 @@ namespace Factory
             if (targetPosition == transform.position)
             {
                 System.Random random = new System.Random();
-                float randomX = random.Next(-30, 30) * 0.1f;
+                float randomX = random.Next(-40, 40) * 0.1f;
                 int moveArea = (int)(fishConfig.moveArea) * 10;
                 moveArea = Mathf.Abs(moveArea);
                 float randomY = fishConfig.depth + random.Next(-moveArea, moveArea) * 0.1f;
@@ -343,7 +343,7 @@ namespace Factory
             float distance = Vector3.Distance(transform.position, targetPosition);
             float time = distance * fishConfig.speed;
             Vector3 direction = targetPosition - transform.position;
-            Vector3 outputDirection = new Vector3(direction.x > 0 ? 1 : -1, 1, 1);
+            Vector3 outputDirection = new Vector3(direction.x >= 0 ? 1 : -1, 1, 1);
             FlipWithDirection(outputDirection);
             _moveTween = transform
                 .DOMove(targetPosition, time)

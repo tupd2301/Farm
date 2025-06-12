@@ -32,7 +32,7 @@ public class SquidController : FishController
                 spriteRenderer.DOFade(0, 3f);
             }
             transform
-                .DOLocalMoveY(5, 3f)
+                .DOLocalMoveY(0, 3f)
                 .OnComplete(() =>
                 {
                     gameObject.SetActive(false);

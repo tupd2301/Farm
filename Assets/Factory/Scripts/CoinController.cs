@@ -21,7 +21,7 @@ namespace Factory
         {
             isCollected = false;
             transform.DOComplete();
-            transform.DOLocalMoveY(-5.9f, 1f).SetEase(Ease.InSine);
+            transform.DOLocalMoveY(-5.7f, 1f).SetEase(Ease.InSine);
             if (isCollected || gameObject.activeSelf == false)
                 return;
             CancelInvoke("OnClick");
