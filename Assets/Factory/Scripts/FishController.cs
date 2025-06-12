@@ -334,7 +334,7 @@ namespace Factory
             {
                 System.Random random = new System.Random();
                 float randomX = random.Next(-30, 30) * 0.1f;
-                int moveArea = (int)(fishConfig.depth * fishConfig.moveArea);
+                int moveArea = (int)(fishConfig.depth + fishConfig.moveArea);
                 float randomY = random.Next(-moveArea, moveArea) * 0.1f;
                 targetPosition = new Vector3(randomX, randomY, 0);
             }
