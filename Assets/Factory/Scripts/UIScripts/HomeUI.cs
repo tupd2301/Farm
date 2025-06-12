@@ -33,6 +33,9 @@ namespace Factory
         private TMP_Text _totalFishText;
 
         [SerializeField]
+        private TMP_Text _notReadyFishAmountText;
+
+        [SerializeField]
         private TMP_Text _waveText;
 
         [SerializeField]
@@ -57,6 +60,7 @@ namespace Factory
         public TMP_Text GameStartDayText;
 
         public TMP_Text TotalFishText => _totalFishText;
+        public TMP_Text NotReadyFishAmountText => _notReadyFishAmountText;
         public TMP_Text TotalGoldText => _goldText;
 
         private bool _isLockFirstOpenShop = false;

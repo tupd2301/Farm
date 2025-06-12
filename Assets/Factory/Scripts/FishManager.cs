@@ -237,6 +237,9 @@ namespace Factory
                     indexFish += 2;
                     Debug.Log("InitFish: " + fishConfig.fishConfig.fishCurrencyValue);
                     fish.gameObject.name = "Fish" + index;
+                    GameManager.Instance.homeUI.NotReadyFishAmountText.text = (
+                        this.totalFish - _fishes.Count
+                    ).ToString();
                 }
             }
             await Task.Delay(10000);
@@ -278,6 +281,9 @@ namespace Factory
             {
                 this.totalFish += fishConfig.amount;
             }
+            GameManager.Instance.homeUI.NotReadyFishAmountText.text = (
+                this.totalFish - _fishes.Count
+            ).ToString();
             UpdateFishCountText(GameManager.Instance.GetCurrentDayConfig().maxInPool);
         }
     }
