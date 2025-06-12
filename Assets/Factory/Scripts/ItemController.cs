@@ -93,6 +93,7 @@ namespace Factory
 
             // Kill any existing move tween
             moveTween?.Kill();
+            await Task.Delay(500);
             transform
                 .DORotate(new Vector3(0, 0, 90), 4f, RotateMode.LocalAxisAdd)
                 .SetEase(Ease.Linear)
