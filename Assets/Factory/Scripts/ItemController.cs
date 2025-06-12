@@ -88,12 +88,12 @@ namespace Factory
 
         private async Task SetGravityInLiquid()
         {
-            GetComponent<Collider2D>().isTrigger = true;
             GetComponent<Rigidbody2D>().gravityScale = 0f; // Reduced gravity for slower fall
+            await Task.Delay(500);
+            GetComponent<Collider2D>().isTrigger = true;
 
             // Kill any existing move tween
             moveTween?.Kill();
-            await Task.Delay(500);
             transform
                 .DORotate(new Vector3(0, 0, 90), 4f, RotateMode.LocalAxisAdd)
                 .SetEase(Ease.Linear)
