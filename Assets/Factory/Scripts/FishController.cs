@@ -102,6 +102,11 @@ namespace Factory
             currentTotalTickValue = 0;
             state = FishState.Moving;
             SetSprite(0);
+            _spriteRenderer.transform.localScale = new Vector3(
+                _spriteRenderer.transform.localScale.x * fishConfig.size,
+                _spriteRenderer.transform.localScale.y * fishConfig.size,
+                _spriteRenderer.transform.localScale.z * fishConfig.size
+            );
             targetPosition = transform.position;
             Move();
             Debug.Log("Init: " + fishConfig.fishPrefabName);
@@ -341,7 +346,7 @@ namespace Factory
                 targetPosition = new Vector3(randomX, randomY, 0);
             }
             float distance = Vector3.Distance(transform.position, targetPosition);
-            float time = distance * fishConfig.speed;
+            float time = distance / fishConfig.speed;
             Vector3 direction = targetPosition - transform.position;
             Vector3 outputDirection = new Vector3(direction.x >= 0 ? 1 : -1, 1, 1);
             FlipWithDirection(outputDirection);

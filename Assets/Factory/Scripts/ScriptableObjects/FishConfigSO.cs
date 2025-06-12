@@ -103,6 +103,7 @@ namespace Factory
         public List<FishSpriteByHP> sprites;
 
         public float speed = 1;
+        public float size = 1;
 
         [Range(-8, 0)]
         public float depth = 0;
@@ -125,6 +126,7 @@ namespace Factory
             fishPrefabName = other.fishPrefabName;
             isBoss = other.isBoss;
             speed = other.speed;
+            size = other.size;
         }
     }
 }
