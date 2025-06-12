@@ -227,7 +227,7 @@ namespace Factory
                     _fishes.Add(fish.GetComponent<FishController>());
                     fish.transform.localPosition = new Vector3(
                         _fishMoveDistance * (random.Next(0, 2) == 0 ? -1 : 1),
-                        random.Next(2, 6),
+                        random.Next(-8, -2),
                         0
                     );
                     fish.transform.DOScale(fish.transform.localScale * 1.5f, 0.5f)

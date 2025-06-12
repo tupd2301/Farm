@@ -104,10 +104,10 @@ namespace Factory
 
         public float speed = 1;
 
-        [Range(0, 4)]
+        [Range(-8, 0)]
         public float depth = 0;
 
-        [Range(0, 2)]
+        [Range(0, 4)]
         public float moveArea = 0;
 
         public void Copy(FishConfig other)

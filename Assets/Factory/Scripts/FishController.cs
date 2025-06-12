@@ -104,6 +104,7 @@ namespace Factory
             SetSprite(0);
             targetPosition = transform.position;
             Move();
+            Debug.Log("Init: " + fishConfig.fishPrefabName);
             currentTotalTickValue = fishConfig.fishCurrencyValue * 0.5f;
             _spriteRenderer.material.SetFloat("_SwaySpeed", 1);
             _spriteRenderer.material.SetColor("_Color", new Color32(255, 255, 255, 255));
@@ -334,8 +335,9 @@ namespace Factory
             {
                 System.Random random = new System.Random();
                 float randomX = random.Next(-30, 30) * 0.1f;
-                int moveArea = (int)(fishConfig.depth + fishConfig.moveArea);
-                float randomY = random.Next(-moveArea, moveArea) * 0.1f;
+                int moveArea = (int)(fishConfig.moveArea) * 10;
+                moveArea = Mathf.Abs(moveArea);
+                float randomY = fishConfig.depth + random.Next(-moveArea, moveArea) * 0.1f;
                 targetPosition = new Vector3(randomX, randomY, 0);
             }
             float distance = Vector3.Distance(transform.position, targetPosition);

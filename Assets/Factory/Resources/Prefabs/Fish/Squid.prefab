@@ -814,8 +814,8 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: -1, z: 0}
-  m_LocalScale: {x: 0.8, y: 1.2, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_LocalScale: {x: 0, y: 0, z: 0}
+  m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 8645911488489095727}
   - {fileID: 7403793954131126679}
@@ -7243,7 +7243,10 @@ MonoBehaviour:
   _animator: {fileID: 5125848578760376250}
   isAttacking: 0
   attackTime: 5.5
-  _spriteRenderers: []
+  _spriteRenderers:
+  - {fileID: 3616034782448463207}
+  - {fileID: 8076636600446184969}
+  - {fileID: 5409233409239491995}
 --- !u!1 &5369984674073236874
 GameObject:
   m_ObjectHideFlags: 0
