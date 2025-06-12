@@ -212,6 +212,10 @@ namespace Factory
                 var index = 0;
                 for (int i = 0; i < fishConfig.amount; i++, index++)
                 {
+                    if (fishConfig.fishConfig.isBoss)
+                    {
+                        GameManager.Instance.homeUI.ShowWarningEffect();
+                    }
                     await Task.Delay(fishConfig.fishConfig.patienceValue * 1000);
                     if (
                         GameManager.Instance.GameState.CurrentState == GameStateType.Shop

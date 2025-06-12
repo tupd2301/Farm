@@ -45,6 +45,9 @@ namespace Factory
         private RectTransform _goldContainer;
 
         [SerializeField]
+        private Image _warningEffect;
+
+        [SerializeField]
         private List<ShopItem> _shopItems = new List<ShopItem>();
 
         public GridLayoutGroup GearItemContainer => _gearItemContainer;
@@ -85,6 +88,21 @@ namespace Factory
             SetLockRerollButton(GameManager.Instance.CheckGold(5));
         }
 
+        public void ShowWarningEffect()
+        {
+            _warningEffect.DOComplete();
+            _warningEffect.color = new Color(1, 0.2f, 0.2f, 0);
+            _warningEffect.gameObject.SetActive(true);
+            _warningEffect
+                .DOFade(1, 0.5f)
+                .SetEase(Ease.InSine)
+                .SetLoops(6, LoopType.Yoyo)
+                .OnComplete(() =>
+                {
+                    _warningEffect.gameObject.SetActive(false);
+                });
+        }
+
         public void OffsetGearItemContainer()
         {
             if (GameManager.Instance.GameState.CurrentState == GameStateType.Main)
@@ -117,6 +135,7 @@ namespace Factory
             _shopPopup.SetActive(false);
             _recycleBin.gameObject.SetActive(false);
         }
+
         public void UpdateDay()
         {
             UpdateWaveText();
@@ -134,7 +153,9 @@ namespace Factory
 
         public void UpdateLevelProgressSlider()
         {
-            _levelProgressSlider.value = (GameManager.Instance.currentDay + 1) / (float)GameManager.Instance.GetCurrentLevelConfig().dayConfigurations.Count;
+            _levelProgressSlider.value =
+                (GameManager.Instance.currentDay + 1)
+                / (float)GameManager.Instance.GetCurrentLevelConfig().dayConfigurations.Count;
         }
 
         public async Task ShowGameStartPanel()
