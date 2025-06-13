@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Atom;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Factory
 {
@@ -37,6 +38,11 @@ namespace Factory
         private ItemDataSO _itemDataSO;
 
         [SerializeField]
+        private GridLayoutGroup _gearItemContainer;
+        public GameObject TempContainer;
+
+
+        [SerializeField]
         private LevelConfigSO _levelConfigSO;
 
         private List<GameObject> _activeItems = new List<GameObject>();
@@ -50,6 +56,7 @@ namespace Factory
         public int currentDay = 0;
         private bool _isFirstOpenShop = false;
         private int _gold = 0;
+        public GridLayoutGroup GearItemContainer => _gearItemContainer;
 
         public bool isStop = false;
 
@@ -300,16 +307,16 @@ namespace Factory
         {
             ClearAllGears();
             float size = 110;
-            homeUI.GearItemContainer.cellSize = new Vector2(size, size);
-            homeUI.GearItemContainer.spacing = new Vector2(-5, -5);
-            homeUI.GearItemContainer.constraintCount = (int)gridSize.x;
+            _gearItemContainer.cellSize = new Vector2(size, size);
+            _gearItemContainer.spacing = new Vector2(-5, -5);
+            _gearItemContainer.constraintCount = (int)gridSize.x;
             for (int i = 0; i < gridSize.y; i++)
             {
                 for (int j = 0; j < gridSize.x; j++)
                 {
                     var gearController = Instantiate(
                             Resources.Load<GameObject>("Prefabs/Gear"),
-                            homeUI.GearItemContainer.transform
+                            _gearItemContainer.transform
                         )
                         .GetComponent<GearController>();
                     _gearControllers.Add(gearController);

@@ -412,9 +412,9 @@ namespace Factory
                 return;
 
             // Create a temporary gear
-            _tempGear = Instantiate(gameObject, GameManager.Instance.HomeUI.TempContainer.transform)
+            _tempGear = Instantiate(gameObject, GameManager.Instance.TempContainer.transform)
                 .GetComponent<GearController>();
-            _tempGear.transform.SetParent(GameManager.Instance.HomeUI.TempContainer.transform);
+            _tempGear.transform.SetParent(GameManager.Instance.TempContainer.transform);
             _tempGear.transform.localScale = Vector3.zero;
             _tempGear.GetComponent<RectTransform>().sizeDelta = Vector2.one * 190;
             _tempGear.GetComponent<RectTransform>().DOScale(Vector3.one, 0.2f).SetEase(Ease.InBack);

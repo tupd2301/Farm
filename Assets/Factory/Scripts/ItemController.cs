@@ -24,6 +24,8 @@ namespace Factory
 
         public bool isInWater = false;
 
+        private List<Task> _asyncTasks = new List<Task>();
+
         private void KillAllTweens()
         {
             // Kill any DOTween animations on the item icon
@@ -37,7 +39,17 @@ namespace Factory
             transform.DOKill();
 
             // Kill any move tween
-            moveTween.Kill();
+            moveTween?.Kill();
+
+            //remove all async await
+            foreach (var task in _asyncTasks)
+            {
+                if (!task.IsCompleted)
+                {
+                    task.Dispose();
+                }
+            }
+            _asyncTasks.Clear();
         }
 
         void OnEnable()
@@ -91,7 +103,9 @@ namespace Factory
 
         private async Task SetGravityInLiquid()
         {
-            await Task.Delay(2000);
+            var delayTask = Task.Delay(2000);
+            _asyncTasks.Add(delayTask);
+            await delayTask;
             GetComponent<Rigidbody2D>().gravityScale = 0f; // Reduced gravity for slower fall
             GetComponent<Collider2D>().isTrigger = true;
 
@@ -101,19 +115,25 @@ namespace Factory
                 .DORotate(new Vector3(0, 0, 90), 4f, RotateMode.LocalAxisAdd)
                 .SetEase(Ease.Linear)
                 .SetLoops(-1, LoopType.Yoyo);
-            await transform
-                .DOLocalMoveY(-1.5f, 2f)
+            var moveTask = transform
+                .DOLocalMoveY(-0.3f, 1f)
                 .OnComplete(() =>
                 {
                     isInWater = true;
                 }).AsyncWaitForCompletion();
+            _asyncTasks.Add(moveTask);
+            await moveTask;
             if (itemData.dropType == DropType.Leaf)
             {
-                await SetLeafDrop();
+                var leafTask = SetLeafDrop();
+                _asyncTasks.Add(leafTask);
+                await leafTask;
             }
             else if (itemData.dropType == DropType.Standard)
             {
-                SetStandardDrop();
+                var standardTask = SetStandardDrop();
+                _asyncTasks.Add(standardTask);
+                await standardTask;
             }
         }
 
@@ -124,8 +144,12 @@ namespace Factory
                 .DOLocalMoveY(-7.5f, 24f / itemData.dropSpeed)
                 .OnComplete(async () =>
                 {
-                    await Task.Delay(1000);
-                    await CollectItem();
+                    var delayTask = Task.Delay(1000);
+                    _asyncTasks.Add(delayTask);
+                    await delayTask;
+                    var collectTask = CollectItem();
+                    _asyncTasks.Add(collectTask);
+                    await collectTask;
                 });
         }
 
@@ -138,22 +162,32 @@ namespace Factory
                 .DOLocalMoveY(-7.5f, 15f / itemData.dropSpeed)
                 .OnComplete(async () =>
                 {
-                    await Task.Delay(1000);
-                    await CollectItem();
+                    var delayTask = Task.Delay(1000);
+                    _asyncTasks.Add(delayTask);
+                    await delayTask;
+                    var collectTask = CollectItem();
+                    _asyncTasks.Add(collectTask);
+                    await collectTask;
                 });
             for (int i = 0; i < 5; i++)
             {
                 if (transform.localPosition.y <= -7)
                 {
                     moveTween.Kill();
-                    await Task.Delay(1000);
-                    await CollectItem();
+                    var delayTask = Task.Delay(1000);
+                    _asyncTasks.Add(delayTask);
+                    await delayTask;
+                    var collectTask = CollectItem();
+                    _asyncTasks.Add(collectTask);
+                    await collectTask;
                     return;
                 }
-                await transform
+                var moveTask = transform
                     .DOLocalMoveX(transform.localPosition.x + (moveLeft ? -0.5f : 0.5f), 1.5f)
                     .SetLoops(2, LoopType.Yoyo)
                     .AsyncWaitForCompletion();
+                _asyncTasks.Add(moveTask);
+                await moveTask;
                 moveLeft = !moveLeft;
             }
         }
@@ -164,13 +198,17 @@ namespace Factory
             {
                 return;
             }
-            await Task.Delay(2000);
+            var delayTask = Task.Delay(2000);
+            _asyncTasks.Add(delayTask);
+            await delayTask;
             if (isCollected)
             {
                 return;
             }
             isCollected = true;
-            await _itemIcon.DOFade(0, 1f).AsyncWaitForCompletion();
+            var fadeTask = _itemIcon.DOFade(0, 1f).AsyncWaitForCompletion();
+            _asyncTasks.Add(fadeTask);
+            await fadeTask;
             GameManager.Instance.CollectItem(this);
         }
 
@@ -256,7 +294,8 @@ namespace Factory
                     if (hit.collider.CompareTag("Liquid") && !isInLiquid)
                     {
                         isInLiquid = true;
-                        SetGravityInLiquid();
+                        var gravityTask = SetGravityInLiquid();
+                        _asyncTasks.Add(gravityTask);
                         FreezeConstrain();
                     }
                     if (hit.collider.CompareTag("Item") && !isCollected && mergeable)

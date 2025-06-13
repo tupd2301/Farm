@@ -11,8 +11,6 @@ namespace Factory
 {
     public class HomeUI : UIController
     {
-        [SerializeField]
-        private GridLayoutGroup _gearItemContainer;
 
         [SerializeField]
         private GameObject _shopPopup;
@@ -50,13 +48,11 @@ namespace Factory
         [SerializeField]
         private List<ShopItem> _shopItems = new List<ShopItem>();
 
-        public GridLayoutGroup GearItemContainer => _gearItemContainer;
 
         public Button StartButton => _startButton;
 
         public List<ShopItem> ShopItems => _shopItems;
 
-        public GameObject TempContainer;
 
         public RectTransform GameStartPanel;
         public TMP_Text GameStartLevelText;
@@ -126,11 +122,11 @@ namespace Factory
         {
             if (GameManager.Instance.GameState.CurrentState == GameStateType.Main)
             {
-                _gearItemContainer.GetComponent<RectTransform>().DOAnchorPosY(-500, 0.5f);
+                GameManager.Instance.GearItemContainer.GetComponent<RectTransform>().DOAnchorPosY(-500, 0.5f);
             }
             if (GameManager.Instance.GameState.CurrentState == GameStateType.Shop)
             {
-                _gearItemContainer.GetComponent<RectTransform>().DOAnchorPosY(-550, 0.5f);
+                GameManager.Instance.GearItemContainer.GetComponent<RectTransform>().DOAnchorPosY(-550, 0.5f);
             }
         }
 

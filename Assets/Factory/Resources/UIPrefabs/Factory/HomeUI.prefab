@@ -2471,7 +2471,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _ignoredBackKey: 0
-  _gearItemContainer: {fileID: 4612120814238099467}
   _shopPopup: {fileID: 44614725704336478}
   _recycleBin: {fileID: 122885404095607796}
   _startButton: {fileID: 8461926167010237976}
@@ -2502,7 +2501,6 @@ MonoBehaviour:
     priceStrikethrough: 0
     panelImage: {fileID: 6211434809399740968}
     priceImage: {fileID: 8352453370656150406}
-  TempContainer: {fileID: 5801042446911160961}
   GameStartPanel: {fileID: 18261029289196081}
   GameStartLevelText: {fileID: 5314058028580854814}
   GameStartDayText: {fileID: 69421479193643543}
@@ -4728,7 +4726,7 @@ RectTransform:
   m_GameObject: {fileID: 7297678247927653092}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 6549185257978073894}
