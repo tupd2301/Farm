@@ -8832,21 +8832,21 @@ MonoBehaviour:
   _soundAudioSource: {fileID: 971814350}
   _musicAudioSource: {fileID: 944776785}
   _commonAudioClips:
-  - AudioClip: {fileID: 0}
+  - AudioClip: {fileID: 8300000, guid: 927991f77e7e74ea9a058705fe895e48, type: 3}
     AudioId: Tap
-  - AudioClip: {fileID: 0}
+  - AudioClip: {fileID: 8300000, guid: 6887f170a389848a08f6164f71e8ee9e, type: 3}
     AudioId: Eat
-  - AudioClip: {fileID: 0}
+  - AudioClip: {fileID: 8300000, guid: 47372c853108746568b4b203951b7e02, type: 3}
     AudioId: Full
-  - AudioClip: {fileID: 0}
+  - AudioClip: {fileID: 8300000, guid: 67b72db4eb8584c37a2ff25804524caa, type: 3}
     AudioId: Warning
-  - AudioClip: {fileID: 0}
+  - AudioClip: {fileID: 8300000, guid: 4eed13da0065f439bbf07d69120581d6, type: 3}
     AudioId: Coin
   _combo1AudioClip: {fileID: 0}
   _combo2AudioClip: {fileID: 0}
   _combo3AudioClip: {fileID: 0}
   _bgMusics:
-  - {fileID: 0}
+  - {fileID: 8300000, guid: 3d461c59d15044847a4a9199c715f08e, type: 3}
 --- !u!1 &1721953683
 GameObject:
   m_ObjectHideFlags: 0
