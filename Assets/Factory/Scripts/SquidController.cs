@@ -123,7 +123,7 @@ public class SquidController : FishController
                 });
             return;
         }
-        if (targetPosition == transform.position)
+        if (targetPosition == transform.localPosition)
         {
             float randomX = random.Next(-30, 30) * 0.1f;
             int moveArea = (int)(fishConfig.moveArea * 10);

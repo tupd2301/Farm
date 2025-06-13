@@ -9,8 +9,17 @@ using UnityEngine;
 public class ScreenTrigger : MonoBehaviour
 {
     public List<GameObject> _particles;
+    private Camera _uiCamera;
+    private RectTransform _canvasRect;
 
-    public Touch _touch;
+    private void Start()
+    {
+        _uiCamera = UIManager.Instance.CameraUI;
+        if (_particles.Count > 0)
+        {
+            _canvasRect = _particles[0].transform.parent.GetComponent<RectTransform>();
+        }
+    }
 
     public GameObject GetObject()
     {
@@ -19,37 +28,55 @@ public class ScreenTrigger : MonoBehaviour
 
     void Update()
     {
-        if (Input.touchCount > 0 && _touch.phase == TouchPhase.Began)
+        // Handle touch input
+        if (Input.touchCount > 0)
         {
-            _touch = Input.GetTouch(0);
-            SpawnParticle(_touch.position);
+            Touch touch = Input.GetTouch(0);
+            if (touch.phase == TouchPhase.Began)
+            {
+                HandleInputPosition(touch.position);
+            }
         }
-        else if (Input.GetMouseButtonUp(0))
+        // Handle mouse input for editor testing
+        else if (Input.GetMouseButtonDown(0))
         {
-            SpawnParticle(Input.mousePosition);
+            HandleInputPosition(Input.mousePosition);
         }
     }
 
-    public void SpawnParticle(Vector3 position)
+    private void HandleInputPosition(Vector2 screenPosition)
     {
-        Debug.Log("SpawnParticle");
-        var particle = GetObject();
-        if (particle != null && position.y < Screen.height / 2f)
-        {
-            // Convert screen position to world position in the UI canvas
-            Vector2 localPoint;
-            RectTransform canvasRect = particle.transform.parent.GetComponent<RectTransform>();
+        if (_canvasRect == null || _uiCamera == null) return;
 
-            // Use RectTransformUtility for proper UI coordinate conversion
-            RectTransformUtility.ScreenPointToLocalPointInRectangle(
-                canvasRect,
-                position,
-                UIManager.Instance.CameraUI, // Use the proper UI camera
-                out localPoint
-            );
-            AudioManager.Instance.PlaySound("Tap");
-            particle.GetComponent<RectTransform>().localPosition = localPoint;
+        // Convert screen position to world position
+        Vector3 worldPosition = _uiCamera.ScreenToWorldPoint(new Vector3(screenPosition.x, screenPosition.y, _uiCamera.nearClipPlane));
+        
+        // Convert world position to local position in canvas
+        Vector2 localPoint;
+        RectTransformUtility.ScreenPointToLocalPointInRectangle(
+            _canvasRect,
+            screenPosition,
+            _uiCamera,
+            out localPoint
+        );
+
+        SpawnParticle(localPoint);
+    }
+
+    public void SpawnParticle(Vector2 localPosition)
+    {
+        var particle = GetObject();
+        if (particle == null) return;
+
+        // Validate position is within screen bounds
+        if (localPosition.y < Screen.height / 2f)
+        {
+            RectTransform particleRect = particle.GetComponent<RectTransform>();
+            particleRect.localPosition = localPosition;
             particle.SetActive(true);
+
+            AudioManager.Instance.PlaySound("Tap");
+
             DOVirtual.DelayedCall(
                 1f,
                 () =>

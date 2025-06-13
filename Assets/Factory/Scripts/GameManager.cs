@@ -236,7 +236,7 @@ namespace Factory
                 item.GetComponent<SpriteRenderer>().material
             );
             item.GetComponent<SpriteRenderer>().material.SetFloat("_Dissolve", 1f);
-            item.transform.SetParent(_itemContainer.transform);
+            item.transform.SetParent(FishManager.Instance._fishParent.transform);
             position = position * mainCamera.orthographicSize / 6.4f;
             item.transform.position = new Vector3(position.x, position.y, 0);
             float cost = (float)(checkItemData.cost * gearController.gearData.level + Amplifier);

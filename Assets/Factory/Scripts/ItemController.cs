@@ -22,6 +22,8 @@ namespace Factory
 
         public AnimationCurve leafDropCurve;
 
+        public bool isInWater = false;
+
         private void KillAllTweens()
         {
             // Kill any DOTween animations on the item icon
@@ -44,6 +46,7 @@ namespace Factory
             isCollected = false;
             mergeable = false;
             isInLiquid = false;
+            isInWater = false;
 
             // Kill all active tweens
             KillAllTweens();
@@ -98,6 +101,12 @@ namespace Factory
                 .DORotate(new Vector3(0, 0, 90), 4f, RotateMode.LocalAxisAdd)
                 .SetEase(Ease.Linear)
                 .SetLoops(-1, LoopType.Yoyo);
+            await transform
+                .DOLocalMoveY(-1.5f, 2f)
+                .OnComplete(() =>
+                {
+                    isInWater = true;
+                }).AsyncWaitForCompletion();
             if (itemData.dropType == DropType.Leaf)
             {
                 await SetLeafDrop();
@@ -112,7 +121,7 @@ namespace Factory
         {
             moveTween = null;
             transform
-                .DOLocalMoveY(-6f, 24f / itemData.dropSpeed)
+                .DOLocalMoveY(-7.5f, 24f / itemData.dropSpeed)
                 .OnComplete(async () =>
                 {
                     await Task.Delay(1000);
@@ -126,7 +135,7 @@ namespace Factory
 
             // Create the zigzag sequence
             moveTween = transform
-                .DOLocalMoveY(-6f, 15f / itemData.dropSpeed)
+                .DOLocalMoveY(-7.5f, 15f / itemData.dropSpeed)
                 .OnComplete(async () =>
                 {
                     await Task.Delay(1000);
@@ -134,7 +143,7 @@ namespace Factory
                 });
             for (int i = 0; i < 5; i++)
             {
-                if (transform.localPosition.y <= -6)
+                if (transform.localPosition.y <= -7)
                 {
                     moveTween.Kill();
                     await Task.Delay(1000);

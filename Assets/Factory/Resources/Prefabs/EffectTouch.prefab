@@ -13607,7 +13607,7 @@ ParticleSystem:
       emitter: {fileID: 8451612246397328160}
       type: 0
       properties: 0
-      emitProbability: 0.3
+      emitProbability: 0.7
   LightsModule:
     enabled: 0
     ratio: 0

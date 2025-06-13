@@ -70,6 +70,8 @@ namespace Factory
 
         protected bool _lockTarget = false;
 
+        private Vector3 _originalScale;
+
         public void Awake()
         {
             _canvas = GetComponentInChildren<Canvas>();
@@ -115,6 +117,7 @@ namespace Factory
             _spriteRenderer.material.SetColor("_Color", new Color32(255, 255, 255, 255));
             _currentTargetItem = null;
             _hpBarMask.gameObject.SetActive(true);
+            _originalScale = _spriteRenderer.transform.localScale;
 
             UpdateHpBar();
             if (fishConfig.isBoss)
@@ -191,6 +194,16 @@ namespace Factory
             {
                 return;
             }
+            if (
+                _currentTargetItem == null
+                || _currentTargetItem.isCollected
+                || !_currentTargetItem.isInLiquid
+                || !_currentTargetItem.gameObject.activeSelf
+            )
+            {
+                _currentTargetItem = null;
+            }
+
             // Use raycast to find items in range
             RaycastHit2D[] hits = Physics2D.CircleCastAll(transform.position, 2.5f, Vector2.zero);
             // Find the closest collectible item
@@ -199,7 +212,7 @@ namespace Factory
                 if (hit.collider != null && hit.collider.CompareTag("Item"))
                 {
                     ItemController item = hit.collider.GetComponent<ItemController>();
-                    if (item.transform.position.y > -1f)
+                    if (!item.isInWater)
                     {
                         continue;
                     }
@@ -220,9 +233,10 @@ namespace Factory
                             {
                                 return;
                             }
-                            _fishBody
-                                .DOScale(
-                                    _fishBody.localScale * tweenParams.fishGrowScaleMultiplier,
+                            _spriteRenderer
+                                .transform.DOScale(
+                                    _spriteRenderer.transform.localScale
+                                        * tweenParams.fishGrowScaleMultiplier,
                                     tweenParams.fishGrowScaleDuration
                                 )
                                 .SetLoops(2, LoopType.Yoyo);
@@ -244,7 +258,7 @@ namespace Factory
                                 }
                             }
                             _currentTargetItem = item;
-                            targetPosition = item.transform.position;
+                            targetPosition = item.transform.localPosition;
                             _lockTarget = true;
                             Move();
                         }
@@ -296,6 +310,20 @@ namespace Factory
             if (state == FishState.Moving)
             {
                 FindTarget();
+                ScaleFish();
+            }
+        }
+
+        private void ScaleFish()
+        {
+            float value = currentTotalTickValue / fishConfig.fishCurrencyValue - 0.8f;
+            if (value > 0)
+            {
+                _spriteRenderer.transform.localScale = _originalScale * 1.2f;
+            }
+            else
+            {
+                _spriteRenderer.transform.localScale = _originalScale;
             }
         }
 
@@ -303,6 +331,7 @@ namespace Factory
         {
             if (state == FishState.Moving)
             {
+                _currentTargetItem = null;
                 targetPosition = transform.position;
                 Move();
                 Debug.Log("OnClick");
@@ -338,7 +367,7 @@ namespace Factory
             }
             _moveTween.Kill();
             _moveTween = null;
-            if (targetPosition == transform.position)
+            if (targetPosition == transform.localPosition)
             {
                 System.Random random = new System.Random();
                 float randomX = random.Next(-30, 30) * 0.1f;
@@ -348,13 +377,15 @@ namespace Factory
                 float randomY = fishConfig.depth + random.Next(-moveArea, moveArea) * 0.1f;
                 targetPosition = new Vector3(randomX, randomY, 0);
             }
-            float distance = Vector3.Distance(transform.position, targetPosition);
+            float distance = Vector3.Distance(transform.localPosition, targetPosition);
             float time = distance / fishConfig.speed;
-            Vector3 direction = targetPosition - transform.position;
+            time *= _currentTargetItem == null ? 1 : 0.75f;
+            Debug.Log((distance / fishConfig.speed) + "Time: " + time);
+            Vector3 direction = targetPosition - transform.localPosition;
             Vector3 outputDirection = new Vector3(direction.x >= 0 ? 1 : -1, 1, 1);
             FlipWithDirection(outputDirection);
             _moveTween = transform
-                .DOMove(targetPosition, time)
+                .DOLocalMove(targetPosition, time)
                 .SetEase(tweenParams.moveToPositionEase)
                 .OnComplete(() =>
                 {

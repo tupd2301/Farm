@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Athena.Common.UI;
 using DG.Tweening;
 using TMPro;
 using UnityEngine;
@@ -23,6 +24,8 @@ namespace Factory
 
         public bool isFishClosing = false;
 
+        public Transform _fishSpawnPoint;
+
         public Slider _patienceSlider;
         public int totalFish = 0;
 
@@ -32,6 +35,21 @@ namespace Factory
         {
             Instance = this;
             _waterMaterial.SetColor("_Color", new Color(0, 1, 0.979797f, 1f));
+        }
+
+        void Start()
+        {
+            Vector3 screenPosition = UIManager.Instance.CameraUI.WorldToScreenPoint(
+                _fishSpawnPoint.position
+            );
+            screenPosition.z = 0;
+            Vector3 worldPosition = GameManager.Instance.mainCamera.ScreenToWorldPoint(
+                screenPosition
+            );
+            worldPosition.z = 0;
+            Debug.Log("screenPosition: " + screenPosition);
+            Debug.Log("worldPosition: " + worldPosition);
+            transform.position = worldPosition;
         }
 
         public void SpawnTextFloating(string text, Vector3 position)
@@ -231,7 +249,7 @@ namespace Factory
                     _fishes.Add(fish.GetComponent<FishController>());
                     fish.transform.localPosition = new Vector3(
                         _fishMoveDistance * (random.Next(0, 2) == 0 ? -1 : 1),
-                        random.Next(-8, -2),
+                        random.Next(-4, -2),
                         0
                     );
                     fish.transform.DOScale(fish.transform.localScale * 1.5f, 0.5f)
