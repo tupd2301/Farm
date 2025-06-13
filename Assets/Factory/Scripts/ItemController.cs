@@ -88,8 +88,8 @@ namespace Factory
 
         private async Task SetGravityInLiquid()
         {
+            await Task.Delay(2000);
             GetComponent<Rigidbody2D>().gravityScale = 0f; // Reduced gravity for slower fall
-            await Task.Delay(500);
             GetComponent<Collider2D>().isTrigger = true;
 
             // Kill any existing move tween
