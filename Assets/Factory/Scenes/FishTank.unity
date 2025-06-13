@@ -8832,9 +8832,9 @@ MonoBehaviour:
   _soundAudioSource: {fileID: 971814350}
   _musicAudioSource: {fileID: 944776785}
   _commonAudioClips:
-  - AudioClip: {fileID: 8300000, guid: 927991f77e7e74ea9a058705fe895e48, type: 3}
+  - AudioClip: {fileID: 8300000, guid: dace0d0d5e94249219df76d431d8ddbc, type: 3}
     AudioId: Tap
-  - AudioClip: {fileID: 8300000, guid: 6887f170a389848a08f6164f71e8ee9e, type: 3}
+  - AudioClip: {fileID: 8300000, guid: 83a5f380ef79449a0bbdc01ad29539f0, type: 3}
     AudioId: Eat
   - AudioClip: {fileID: 8300000, guid: 47372c853108746568b4b203951b7e02, type: 3}
     AudioId: Full
@@ -8842,6 +8842,8 @@ MonoBehaviour:
     AudioId: Warning
   - AudioClip: {fileID: 8300000, guid: 4eed13da0065f439bbf07d69120581d6, type: 3}
     AudioId: Coin
+  - AudioClip: {fileID: 8300000, guid: e017f6974891a49d497605a810012b60, type: 3}
+    AudioId: Gear
   _combo1AudioClip: {fileID: 0}
   _combo2AudioClip: {fileID: 0}
   _combo3AudioClip: {fileID: 0}
