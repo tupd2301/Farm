@@ -107,7 +107,7 @@ public class AudioManager : MonoBehaviour
         return value;
     }
 
-    public void Init()
+    public void Start()
     {
         _isEnableSound = Load(KEY_SOUND, true);
         _isEnableMusic = Load(KEY_MUSIC, true);
@@ -115,10 +115,12 @@ public class AudioManager : MonoBehaviour
         _currentBackgroundMusicIndex = 0;
 
         _audioClipDict = new();
+
         foreach (var audioClipConfig in _commonAudioClips)
         {
             _audioClipDict.Add(audioClipConfig.AudioId, audioClipConfig.AudioClip);
         }
+        PlayBackgroundMusic();
     }
 
     public void PlaySound(AudioClip clip, float volumne = 1.0f)
@@ -162,8 +164,11 @@ public class AudioManager : MonoBehaviour
 
     public void PlayBackgroundMusic()
     {
-        StopBackgroundMusic();
-        _playBackgroundMusicCoroutine = StartCoroutine(PlayBackgroundMusicWithFade());
+        // StopBackgroundMusic();
+        // _playBackgroundMusicCoroutine = StartCoroutine(PlayBackgroundMusicWithFade());
+        _musicAudioSource.clip = _bgMusics[0];
+        _musicAudioSource.volume = 0.5f;
+        _musicAudioSource.Play();
     }
 
     public void StopBackgroundMusic()
